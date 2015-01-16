@@ -530,6 +530,9 @@ table {
   font-weight: 700;
   font-style: italic;
 }
+.icon-home {
+  background-image: url('/svg/home.svg');
+}
 .icon-add {
   background-image: url('/svg/plus.svg');
 }
