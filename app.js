@@ -14,19 +14,10 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 
 var sessions = require('client-sessions');
-var lusca = require('lusca');
 var flash = require('express-flash');
+var hbs = require('hbs');
 var path = require('path');
 var expressValidator = require('express-validator');
-var connectAssets = require('connect-assets');
-
-/**
- * Controllers (route handlers).
- */
-var simpleController = require('./controllers/simple');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var intakeController = require('./controllers/intake');
 
 /**
  * Import API keys from environment
@@ -63,7 +54,8 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('github_org', 'MozillaFoundation');
 app.set('github_repo', 'plan');
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views');
 
 app.use(sessions({
   cookieName: 'session',
@@ -72,52 +64,44 @@ app.use(sessions({
   activeDuration: 1000 * 60 * 5
 }));
 app.use(compress());
-app.use(connectAssets({
-  paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
-}));
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(
+  path.join(__dirname, 'public'), { maxAge: 1000 * 3600 * 24 * 365.25 })
+);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-app.use(lusca.csrf());
 app.use(cookieParser());
 app.use(flash());
 app.use(github.middleware);
 
 /**
- * CORS
+ * Controllers (route handlers).
  */
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+var routes = {
+  static: require('./controllers/static'),
+  schedule: require('./controllers/schedule')
+};
 
 /**
  * Main routes.
  */
-app.get('/', simpleController.index);
-app.get('/now', simpleController.now);
-app.get('/next', simpleController.next);
-app.get('/who', simpleController.who);
-app.get('/design', simpleController.design);
-app.get('/tools', simpleController.tools);
-app.get('/mentions', simpleController.mentions);
+app.get('/', routes.static.splash);
 
-app.get('/login', userController.getLogin);
-app.get('/logout', userController.logout);
+app.get('/add', routes.schedule.add);
+app.get('/now', routes.schedule.now);
+app.get('/next', routes.schedule.next);
+app.get('/upcoming', routes.schedule.upcoming);
 
-app.get('/intake', function (req, res, next) {
-  if (req.session.token) return next();
-  req.flash('errors', {msg: 'You must be signed-in to add a project.'});
-  next();
-}, intakeController.getIntake);
-app.post('/intake', intakeController.postIntake);
+app.get('/strategy', routes.static.strategy);
+app.get('/dashboard', routes.static.dashboard);
 
-app.get('/api/issues', apiController.getIssues)
-app.get('/api/user', apiController.getUser)
+app.get('/product', routes.static.product);
+app.get('/design', routes.static.design);
+app.get('/engineering', routes.static.engineering);
+app.get('/involved', routes.static.involved);
 
+app.post('/add', routes.schedule.post);
 app.get('/auth/github', oauth.login);
 app.get('/auth/github/callback', function (req, res) {
   oauth.callback(req, res, function (err, body) {
@@ -127,8 +111,12 @@ app.get('/auth/github/callback', function (req, res) {
       req.session.token = body.access_token;
     }
 
-    res.redirect('/');
+    res.redirect('/add');
   });
+});
+app.get('/logout', function (req, res) {
+  req.session.token = null;
+  res.redirect('/');
 });
 
 /**
