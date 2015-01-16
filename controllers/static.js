@@ -40,7 +40,7 @@ exports.design = function(req, res) {
 };
 
 exports.engineering = function(req, res) {
-  res.redirect('https://github.com/MozillaFoundation/MoFo-Engineering-Handbook');
+  res.redirect('http://mozillafoundation.gitbooks.io/mozilla-foundation-engineering-handbook/');
 };
 
 exports.involved = function(req, res) {
