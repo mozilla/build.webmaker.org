@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "./node_modules/.bin/mocha --reporter spec --timeout 5000 test/*.js && ./node_modules/.bin/jscs **/*.js"
+    "test": "./node_modules/.bin/mocha --reporter spec --timeout 5000 test/*.js && ./node_modules/.bin/jscs **/*.js",
+    "build": "./node_modules/.bin/lessc public/css/styles.less > public/css/styles.css"
   },
   "dependencies": {
     "async": "~0.9.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "chai": "~1.10.0",
     "jscs": "~1.8.1",
+    "less": "~2.2.0",
     "mocha": "~2.0.1",
     "supertest": "~0.15.0"
   }
