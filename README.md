@@ -1,6 +1,6 @@
 ## build.webmaker.org
 
-[![Build Status](https://travis-ci.org/MozillaFoundation/plan.svg?branch=master)](https://travis-ci.org/MozillaFoundation/plan)
+[![Build Status](https://travis-ci.org/mozilla/build.webmaker.org.svg?branch=master)](https://travis-ci.org/mozilla/build.webmaker.org)
 
 Build is a site that we use to track what we are working on now and in the future. It provides a central resource for staff and contributors who are interested in the who, what, and how we build product for Webmaker.
 
