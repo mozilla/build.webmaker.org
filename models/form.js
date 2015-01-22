@@ -5,6 +5,7 @@
  * @author   David Ascher <davida@mozillafoundation.org>
  *           Bobby Richter <bobby@mozillafoundation.org>
  *           Andrew Sliwinski <a@mozillafoundation.org>
+ *           Simon Wex <simon@mozillafoundation.org>
  */
 
 var raci = '\n' +
@@ -24,10 +25,6 @@ module.exports = function(req, res, callback) {
   req.assert('vision', 'If you don\'t have a vision for a solution just write, "No idea!".').notEmpty();
 
   var errors = req.validationErrors();
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/add');
-  }
 
   // Format body
   var blob = '' +
@@ -38,7 +35,7 @@ module.exports = function(req, res, callback) {
     '### RACI\n' + raci;
 
   // Return
-  callback(null, {
+  callback(errors, {
     title: req.body.title,
     body: blob
   });

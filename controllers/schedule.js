@@ -22,8 +22,33 @@ var github = new Github(
  * @return {void}
  */
 exports.add = function(req, res) {
+  console.log(req.body);
   res.render('add', {
-    title: 'Add Project'
+    title: 'Add Project',
+    project: req.body
+  });
+};
+
+/**
+ * Form post route handler.
+ *
+ * @param  {object} req Request
+ * @param  {object} res Response
+ *
+ * @return {void}
+ */
+exports.createPost = function(req, res) {
+  form(req, res, function(errors, body) {
+    if (errors) {
+      req.flash('errors', errors);
+      exports.add(req, res);
+    }
+    else {
+      github.postIssueWithToken(req.session.token, body, function(err, body) {
+        if (err) res.redirect('/500');
+        res.redirect(body.html_url);
+      });
+    }
   });
 };
 
@@ -80,25 +105,6 @@ exports.upcoming = function(req, res) {
     res.render('calendar', {
         title: 'Upcoming',
         milestones: body
-    });
-  });
-};
-
-/**
- * Form post route handler.
- *
- * @param  {object} req Request
- * @param  {object} res Response
- *
- * @return {void}
- */
-exports.post = function(req, res) {
-  form(req, res, function(err, body) {
-    if (err) res.redirect('/500');
-
-    github.postIssueWithToken(req.session.token, body, function(err, body) {
-      if (err) res.redirect('/500');
-      res.redirect(body.html_url);
     });
   });
 };
