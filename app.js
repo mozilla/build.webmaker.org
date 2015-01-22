@@ -89,6 +89,8 @@ var routes = {
 app.get('/', routes.static.splash);
 
 app.get('/add', routes.schedule.add);
+app.post('/add', routes.schedule.createPost);
+
 app.get('/now', routes.schedule.now);
 app.get('/next', routes.schedule.next);
 app.get('/upcoming', routes.schedule.upcoming);
@@ -101,7 +103,6 @@ app.get('/design', routes.static.design);
 app.get('/engineering', routes.static.engineering);
 app.get('/involved', routes.static.involved);
 
-app.post('/add', routes.schedule.post);
 app.get('/auth/github', oauth.login);
 app.get('/auth/github/callback', function (req, res) {
   oauth.callback(req, res, function (err, body) {
