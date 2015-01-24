@@ -15,7 +15,7 @@
                 </a>
                 <ul class="labels">
                     {{#each labels}}
-                    <li style="background-color: #{{color}}">{{name}}</li>
+                    <li style="background-color: #{{color}}; color: {{getContrast color}}">{{name}}</li>
                     {{/each}}
                 </ul>
             </li>
@@ -37,7 +37,7 @@
                 </a>
                 <ul class="labels">
                     {{#each labels}}
-                    <li style="background-color: #{{color}}">{{name}}</li>
+                    <li style="background-color: #{{color}}; color: {{getContrast color}}">{{name}}</li>
                     {{/each}}
                 </ul>
             </li>
