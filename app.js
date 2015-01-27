@@ -57,7 +57,7 @@ app.set('github_repo', 'plan');
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
-hbs.registerHelper(function getContrast (hexcolor) {
+hbs.registerHelper('getContrast', function (hexcolor) {
   return (parseInt(hexcolor, 16) > 0xffffff/2) ? '0a3931':'white';
 });
 
