@@ -22,6 +22,7 @@ module.exports = function(req, res, callback) {
   req.assert('problem', 'Please provide a description of the problem you are trying to solve.').notEmpty();
   req.assert('audience', 'Please specify an audience.').notEmpty();
   req.assert('success', 'Please provide a description of what success looks like for your project.').notEmpty();
+  req.assert('measurement', 'If you\'re not sure, just write, "Help needed!".').notEmpty();
   req.assert('vision', 'If you don\'t have a vision for a solution just write, "No idea!".').notEmpty();
 
   var errors = req.validationErrors();
@@ -32,6 +33,7 @@ module.exports = function(req, res, callback) {
     '### Audience\n' + req.body.audience + '\n\n' +
     '### Success\n' + req.body.success + '\n\n' +
     '### Vision\n' + req.body.vision + '\n\n' +
+    '### Measurement\n' + req.body.measurement + '\n\n' +
     '### RACI\n' + raci;
 
   // Return
