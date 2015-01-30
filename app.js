@@ -60,6 +60,10 @@ app.set('views', __dirname + '/views');
 hbs.registerHelper('getContrast', function (hexcolor) {
   return (parseInt(hexcolor, 16) > 0xffffff/2) ? '0a3931':'white';
 });
+hbs.registerHelper('trimIssueBody', function (body) {
+  var lines = body.split('\n');
+  return lines[0];
+});
 
 app.use(sessions({
   cookieName: 'session',
