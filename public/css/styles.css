@@ -585,6 +585,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  height: 100%;
   color: #0a3931;
   background-color: #f9fafa;
   font-family: 'Fira Sans', Helvetica, sans-serif;
@@ -653,6 +654,9 @@ h4 {
 }
 .navigation ul {
   list-style: none;
+}
+.navigation ul li {
+  padding-left: 10px;
 }
 .navigation li {
   margin: 12px 16px;

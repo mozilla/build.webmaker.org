@@ -6,6 +6,20 @@
  */
 
 /**
+ * Import API keys from environment
+ */
+var secrets = require('../config/secrets');
+
+/**
+ * Github handlers
+ */
+var Github = require('../models/github');
+var github = new Github(
+  secrets.github.clientID,
+  secrets.github.clientSecret
+);
+
+/**
  * Splash page route handler.
  *
  * @param  {object} req Request
@@ -35,8 +49,22 @@ exports.product = function(req, res) {
   res.redirect('https://github.com/MozillaFoundation/plan/issues/187');
 };
 
+/**
+ * "Design assets" route handler.
+ *
+ * @param  {object} req Request
+ * @param  {object} res Response
+ *
+ * @return {void}
+ */
 exports.design = function(req, res) {
-  res.redirect('https://github.com/MozillaFoundation/Mofo-Design-Handbook');
+  github.upcomingMilestones(function(err, body) {
+    if (err) res.redirect('/500');
+
+    res.render('assets', {
+        title: 'Design Assets'
+    });
+  });
 };
 
 exports.engineering = function(req, res) {
