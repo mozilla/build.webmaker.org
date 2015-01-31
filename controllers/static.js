@@ -6,20 +6,6 @@
  */
 
 /**
- * Import API keys from environment
- */
-var secrets = require('../config/secrets');
-
-/**
- * Github handlers
- */
-var Github = require('../models/github');
-var github = new Github(
-  secrets.github.clientID,
-  secrets.github.clientSecret
-);
-
-/**
  * Splash page route handler.
  *
  * @param  {object} req Request
@@ -58,12 +44,8 @@ exports.product = function(req, res) {
  * @return {void}
  */
 exports.design = function(req, res) {
-  github.upcomingMilestones(function(err, body) {
-    if (err) res.redirect('/500');
-
-    res.render('assets', {
-        title: 'Design Assets'
-    });
+  res.render('assets', {
+      title: 'Design Assets'
   });
 };
 
