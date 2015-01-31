@@ -28,14 +28,23 @@
         p {
             font-size: 0.8em;
             margin: 0 0 8px 100px;
-
-            white-space: nowrap;
+            max-height: 3.2em;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         li {
-            height: 136px;
+            height: 120px;
+            padding: 12px;
+            margin: 5px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+        }
+
+        li:hover {
+            cursor: pointer;
+            border: 1px solid rgba(1, 1, 1, 0.2);
+            background: rgba(1, 1, 1, 0.08);
         }
     }
 

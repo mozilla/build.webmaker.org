@@ -65,7 +65,7 @@ exports.now = function(req, res) {
     if (err) res.redirect('/500');
 
     res.render('sprint', {
-        title: 'This Sprint',
+        title: 'This Heartbeat',
         issues: body
     });
   });
@@ -84,7 +84,7 @@ exports.next = function(req, res) {
     if (err) res.redirect('/500');
 
     res.render('sprint', {
-        title: 'Next Sprint',
+        title: 'Next Heartbeat',
         issues: body
     });
   });

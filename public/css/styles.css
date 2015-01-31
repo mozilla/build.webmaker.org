@@ -585,6 +585,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  height: 100%;
   color: #0a3931;
   background-color: #f9fafa;
   font-family: 'Fira Sans', Helvetica, sans-serif;
@@ -653,6 +654,9 @@ h4 {
 }
 .navigation ul {
   list-style: none;
+}
+.navigation ul li {
+  padding-left: 10px;
 }
 .navigation li {
   margin: 12px 16px;
@@ -833,12 +837,21 @@ label[for="nav-trigger"] {
 #sprint .issues p {
   font-size: 0.8em;
   margin: 0 0 8px 100px;
-  white-space: nowrap;
+  max-height: 3.2em;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 #sprint .issues li {
-  height: 136px;
+  height: 120px;
+  padding: 12px;
+  margin: 5px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+#sprint .issues li:hover {
+  cursor: pointer;
+  border: 1px solid rgba(1, 1, 1, 0.2);
+  background: rgba(1, 1, 1, 0.08);
 }
 #sprint .labels {
   list-style: none;

@@ -11,7 +11,7 @@
                     <img src="{{user.avatar_url}}" title="Created by" alt="{{user.login}}">
                     {{/if}}
                     <h3>{{title}}</h3>
-                    <p>{{body}}</p>
+                    <p>{{trimIssueBody body}}</p>
                 </a>
                 <ul class="labels">
                     {{#each labels}}
@@ -33,7 +33,7 @@
                     <img src="{{user.avatar_url}}" title="Created by" alt="{{user.login}}">
                     {{/if}}
                     <h3>{{title}}</h3>
-                    <p>{{body}}</p>
+                    <p>{{trimIssueBody body}}</p>
                 </a>
                 <ul class="labels">
                     {{#each labels}}
