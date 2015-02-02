@@ -1,0 +1,67 @@
+{
+  "name": "webmaker-build",
+  "version": "0.1.1",
+  "description": "Build.webmaker.org",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "private": true,
+  "bugs": {
+    "url": "http://github.com/mozillafoundation/build.webmaker.org"
+  },
+  "license": "MPL-2.0",
+  "author": {
+    "name": "Mozilla",
+    "url": "http://mozillafoundation.github.io/mofo-example-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mozillafoundation/mofo-example-app"
+  },
+  "scripts": {
+    "postinstall": "gulp build minify-app",
+    "start": "node server.js",
+    "build": "gulp"
+  },
+  "dependencies": {
+    "6to5ify": "^3.1.2",
+    "async": "^0.9.0",
+    "body-parser": "^1.11.0",
+    "browserify": "^8.1.0",
+    "browserify-global-shim": "^1.0.0",
+    "client-firebase": "^1.0.1",
+    "client-sessions": "^0.7.0",
+    "compression": "^1.4.0",
+    "cookie-parser": "^1.3.3",
+    "cors": "^2.5.3",
+    "errorhandler": "^1.3.3",
+    "es6": "0.0.7",
+    "express-flash": "0.0.2",
+    "express-validator": "^2.8.0",
+    "github-oauth": "^0.2.1",
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.3",
+    "gulp-express": "^0.1.7",
+    "gulp-jshint": "git://github.com/spenceralger/gulp-jshint#overrideJshint",
+    "gulp-jsxcs": "^0.1.7",
+    "gulp-less": "^2.0.1",
+    "gulp-plumber": "^0.6.6",
+    "gulp-sourcemaps": "^1.3.0",
+    "gulp-uglify": "^1.0.2",
+    "gulp-watch": "^3.0.0",
+    "habitat": "^3.1.2",
+    "jshint-jsx": "^0.4.0",
+    "live-server": "^0.6.3",
+    "lru-cache": "^2.5.0",
+    "morgan": "^1.5.1",
+    "react": "^0.12.2",
+    "react-onclickoutside": "^0.2.0",
+    "react-router": "^0.11.6",
+    "reactfire": "^0.4.0",
+    "reactify": "^0.17.1",
+    "request": "^2.52.0",
+    "superagent": "^0.21.0",
+    "vinyl-source-stream": "^1.0.0",
+    "vinyl-transform": "^1.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+@import "colors";
+
+.button {
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: auto;
+
+    margin: 10px;
+    padding: 6px 32px;
+
+    color: @highlight;
+    background-color: transparent;
+    border: 2px solid @highlight;
+    border-radius: 2px;
+
+    font-family: 'Fira Sans', Helvetica, sans-serif;
+    font-size: 0.88em;
+    font-weight: 400;
+    font-kerning: normal;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: @highlight;
+    color: @white;
+}
+
+.btn-white {
+    color: @white;
+    border-color: @white;
+}
+
+.btn-white:hover {
+    background-color: @white;
+    color: @highlight;
+}

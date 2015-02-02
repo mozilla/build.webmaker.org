@@ -1,0 +1,14 @@
+- [x] setup api server
+- [x] current page
+- [x] next page
+- [x] upcoming
+- [x] auth in, log out
+- [x] Add page when logged out -> show sign in button
+- [ ] make add-form validation work
+- [ ] maker add-form actually work
+- [x] auth in with redirect to place whence i came
+- [ ] talk to @Pomax about the gulp chain.
+- [ ] add /u/:user routing
+- [ ] highlight current location in sidebar
+- [ ] refactor githubperson to cache per-user data for sprinkling names
+- [ ] refactor templates into one main page per file

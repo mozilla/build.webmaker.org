@@ -1,0 +1,68 @@
+#calendar {
+  .issues {
+    list-style: none;
+    margin: 16px 0 40px 0;
+    padding: 0;
+
+    li {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        width: 168px;
+        height: 154px;
+
+        padding: 16px;
+        margin: 0 17px 17px 0;
+        
+        background-color: @white;
+        border-radius: 3px;
+        border: 1px solid transparent;
+    }
+
+    li:hover {
+        cursor: pointer;
+        border: 1px solid rgba(1, 1, 1, 0.2);
+        background: rgba(1, 1, 1, 0.08);
+    }
+
+    li:nth-child(3n) {
+        margin: 0 0 17px 0;
+    }
+
+    img {
+        position: absolute;
+        width: 46px;
+        height: 46px;
+
+        bottom: 16px;
+        left: 16px;
+
+        border-radius: 50%;
+        background-color: @gray;
+    }
+
+    a {
+        color: @black;
+        text-decoration: none;
+    }
+
+    .labels {
+        list-style: none;
+        margin: 14px 0 0 0;
+        padding: 0;
+
+        li {
+            height: auto;
+            width: auto;
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 0 0px 4px 4px;
+            border-radius: 2px;
+            font-size: 0.6em;
+        }
+    }
+  }
+  .clearfix {
+      clear: both;
+  }
+}
