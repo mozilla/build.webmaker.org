@@ -241,7 +241,8 @@ var Add = React.createClass({
         "p",
         null,
         "To create new projects you need to be logged-in to your Github account."
-      )
+      ),
+      React.createElement("div", { className: "pagefill" })
     );
     if (this.state.loggedIn) {
       body = React.createElement(

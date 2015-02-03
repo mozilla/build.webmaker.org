@@ -76,6 +76,7 @@ var Add = React.createClass({
       <div>
         <a className="button" onClick={this.login}>Login with Github</a>
         <p>To create new projects you need to be logged-in to your Github account.</p>
+        <div className="pagefill"/>
       </div>
     );
     if (this.state.loggedIn) {
