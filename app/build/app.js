@@ -198,7 +198,7 @@ var App = React.createClass({
           { className: "icon-involved" },
           React.createElement(
             "a",
-            { href: "/involved" },
+            { href: "https://webmaker.org/en-US/getinvolved" },
             "Get Involved"
           )
         )
