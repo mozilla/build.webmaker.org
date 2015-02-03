@@ -10,7 +10,7 @@
 
 var raci = '\n' +
   '* Phase: \n' +
-  '* Owner: \n' +
+  '* Driver: \n' +
   '* Decision Maker: \n' +
   '* Design Lead: \n' +
   '* Development Lead: \n' +
@@ -34,7 +34,7 @@ module.exports = function(req, res, callback) {
     '### Success\n' + req.body.success + '\n\n' +
     '### Vision\n' + req.body.vision + '\n\n' +
     '### Measurement\n' + req.body.measurement + '\n\n' +
-    '### RACI\n' + raci;
+    '### Roles\n' + raci;
 
   // Return
   callback(errors, {
