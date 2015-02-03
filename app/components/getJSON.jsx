@@ -6,7 +6,6 @@ var getJSON = function(url, successHandler, errorHandler) {
   xhr.onreadystatechange = function() {
     var status;
     var data;
-    console.log("IN JSON CB", data);
     /* See http://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate */
     if (xhr.readyState === 4) { /* `DONE` */
       status = xhr.status;

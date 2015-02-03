@@ -95,6 +95,7 @@ var App = React.createClass({
             "Home"
           )
         ),
+        React.createElement(AuthBlock, null),
         React.createElement(
           "li",
           null,
@@ -228,7 +229,6 @@ var Add = React.createClass({
   displayName: "Add",
   mixins: [AuthMixin],
   render: function () {
-    console.log("in render", this.state);
     var body = React.createElement(
       "div",
       null,
@@ -261,8 +261,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "In as few words as possible, describe what",
-              "this project is about."
+              "In as few words as possible, describe what this project is about."
             ),
             React.createElement("textarea", { name: "title", rows: "2" })
           ),
@@ -277,8 +276,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "Describe what’s broken or missing from the",
-              "experience of Webmaker."
+              "Describe what’s broken or missing from the current experience."
             ),
             React.createElement("textarea", { name: "problem", rows: "8" })
           ),
@@ -293,9 +291,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "Describe who is being affected by the problem",
-              "you have described (visitors, teachers, staff,",
-              "community)."
+              "Describe who is being affected by the problem you have described (visitors, teachers, staff, community)."
             ),
             React.createElement("textarea", { name: "audience", rows: "8" })
           ),
@@ -310,9 +306,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "Describe the \"state change\" that you wish to",
-              "accomplish. Do you have metrics that we can",
-              "reference?"
+              "Describe the \"state change\" that you wish to accomplish. Do you have metrics that we can reference?"
             ),
             React.createElement("textarea", { name: "success", rows: "8" })
           ),
@@ -327,9 +321,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "Describe a high level solution to solve the",
-              "problem. Think about the most important,",
-              "impactful part of the solution."
+              "Describe a high level solution to solve the problem. Think about the most important, impactful part of the solution."
             ),
             React.createElement("textarea", { name: "vision", rows: "8" })
           ),
@@ -344,9 +336,7 @@ var Add = React.createClass({
             React.createElement(
               "p",
               null,
-              "Describe the data you will use. Is there",
-              "existing tracking in place? Do you need to",
-              "setup new reports or dashboards?"
+              "Describe the data you will use. Is there existing tracking in place? Do you need to setup new reports or dashboards?"
             ),
             React.createElement("textarea", { name: "measurement", rows: "8" })
           ),
@@ -368,8 +358,7 @@ var Add = React.createClass({
           "h2",
           null,
           "New Initiative"
-        ),
-        React.createElement(AuthBlock, null)
+        )
       ),
       React.createElement(
         "div",
@@ -597,8 +586,7 @@ var Upcoming = React.createClass({
           "h2",
           null,
           "Upcoming"
-        ),
-        React.createElement(AuthBlock, null)
+        )
       ),
       React.createElement(
         "div",
@@ -629,8 +617,7 @@ var Dashboard = React.createClass({
           null,
           "Dashboard for ",
           this.state.details.name
-        ),
-        React.createElement(AuthBlock, null)
+        )
       ),
       React.createElement(
         "div",
@@ -758,8 +745,7 @@ var Design = React.createClass({
           "h2",
           null,
           "Design Assets"
-        ),
-        React.createElement(AuthBlock, null)
+        )
       ),
       React.createElement(
         "div",
@@ -973,7 +959,6 @@ var auth = {
       location.reload();
     } else {
       var newURL = "/auth/github/" + document.location.hash.slice(2);
-      console.log("newURL", newURL);
       window.location = newURL;
     }
   },
@@ -1005,19 +990,25 @@ var AuthBlock = React.createClass({
   displayName: "AuthBlock",
   mixins: [AuthMixin],
   render: function () {
-    console.log("this.state.details", this.state.details);
     var loginOrOut = this.state.loggedIn ? React.createElement(
-      "a",
-      { className: "button btn-white auth", onClick: this.logout },
-      this.state.details.name,
-      " (Sign out)"
+      "li",
+      { className: "icon-github auth" },
+      React.createElement(
+        "a",
+        { onClick: this.logout },
+        "Sign out"
+      )
     ) : React.createElement(
-      "a",
-      { className: "button btn-white auth", onClick: this.login },
-      "Sign in"
+      "li",
+      { className: "icon-github auth" },
+      React.createElement(
+        "a",
+        { onClick: this.login },
+        "Sign in"
+      )
     );
     return React.createElement(
-      "div",
+      "span",
       null,
       loginOrOut
     );
@@ -1036,7 +1027,6 @@ var getJSON = function (url, successHandler, errorHandler) {
   xhr.onreadystatechange = function () {
     var status;
     var data;
-    console.log("IN JSON CB", data);
     /* See http://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate */
     if (xhr.readyState === 4) {
       /* `DONE` */

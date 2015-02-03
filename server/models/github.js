@@ -275,7 +275,6 @@ Github.prototype.getUserInfo = function(username, callback) {
     },
     json: {}
   }, function(err, res, body) {
-    console.log(body);
     if (err) return callback(err);
 
     // Set cache & return

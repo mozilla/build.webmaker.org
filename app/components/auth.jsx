@@ -96,7 +96,6 @@ var auth = {
       location.reload();
     } else {
       var newURL = "/auth/github/" + document.location.hash.slice(2);
-      console.log("newURL", newURL);
       window.location = newURL;
     }
   },
@@ -127,14 +126,13 @@ var AuthMixin = {
 var AuthBlock = React.createClass({
   mixins: [AuthMixin],
   render: function() {
-    console.log("this.state.details", this.state.details);
     var loginOrOut = this.state.loggedIn ?
-      <a className="button btn-white auth" onClick={this.logout}>{this.state.details.name} (Sign out)</a> :
-      <a className="button btn-white auth" onClick={this.login}>Sign in</a>;
+      <li className="icon-github auth"><a onClick={this.logout}>Sign out</a></li> :
+      <li className="icon-github auth"><a onClick={this.login}>Sign in</a></li>;
     return (
-      <div>
+      <span>
           {loginOrOut}
-      </div>
+      </span>
     );
   }
 });
