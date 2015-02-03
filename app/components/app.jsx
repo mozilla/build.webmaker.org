@@ -224,7 +224,6 @@ var Heartbeat = React.createClass({
       <div>
         <div className="header">
           <h2>{this.props.title}</h2>
-          <AuthBlock/>
         </div>
         <div className="main">
           <div id="sprint">
