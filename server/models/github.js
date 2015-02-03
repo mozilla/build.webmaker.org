@@ -209,6 +209,15 @@ Github.prototype.thisMilestone = function(callback) {
     if (err) return callback(err);
 
     var milestone = milestones[0];
+    // Look for the first milestone that is in the future
+    for (var i = 0; i < milestones.length; i++) {
+      milestone = milestones[i];
+      console.log(milestone.due_on, new Date(), new Date(milestone.due_on) > new Date())
+      if (new Date(milestone.due_on) > new Date()) {
+        break;
+      }
+    }
+
     if (typeof milestone === 'undefined') return callback('404');
     _this.getIssuesForMilestone(milestone.number, function(err, result) {
       if (err) return callback(err);
@@ -224,7 +233,16 @@ Github.prototype.nextMilestone = function(callback) {
   _this.getMilestones(function(err, milestones) {
     if (err) return callback(err);
 
-    var milestone = milestones[1];
+    var milestone = milestones[0];
+    // Look for the first milestone that is in the future
+    for (var i = 0; i < milestones.length; i++) {
+      milestone = milestones[i];
+      if (new Date(milestone.due_on) > new Date()) {
+        // look for the next one.
+        milestone = milestones[Math.min(i+1, milestones.length-1)]
+        break;
+      }
+    }
     if (typeof milestone === 'undefined') return callback('404');
     _this.getIssuesForMilestone(milestone.number, function(err, result) {
       if (err) return callback(err);
