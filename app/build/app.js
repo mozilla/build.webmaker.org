@@ -475,8 +475,7 @@ var Heartbeat = React.createClass({
           "h2",
           null,
           this.props.title
-        ),
-        React.createElement(AuthBlock, null)
+        )
       ),
       React.createElement(
         "div",
