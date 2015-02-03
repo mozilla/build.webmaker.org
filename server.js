@@ -105,12 +105,12 @@ app.get('/auth/github', function(req, res) {
   oauthCB(req, res, "");
 });
 
-app.get('/auth/callback/:path', function (req, res) {
+function processCallback(req, res, path) {
   var oauth = require('github-oauth')({
     githubClient: secrets.github.clientID,
     githubSecret: secrets.github.clientSecret,
     baseURL: secrets.github.host,
-    callbackURI: secrets.github.callbackURL + req.params.path,
+    callbackURI: secrets.github.callbackURL + path,
     loginURI: '/login',
     scope: ''
   });
@@ -127,12 +127,20 @@ app.get('/auth/callback/:path', function (req, res) {
           //     "github=j%3A%7B%22body%22%3A%7B%22login... ....qTKzGvAWm5ElZZ9PwUtZs4FAyDkOPtno9480FIX1P0A; path=/; expires=Mon, 02 Feb 2015 19:32:02 GMT; httponly"
           res.cookie('github', body, { maxAge: 900000 });
 
-          res.redirect("/#/"+req.params.path); // Remove this when we move away from # URLs
+          res.redirect("/#/"+path); // Remove this when we move away from # URLs
         }
       });
     }
   });
+}
+app.get('/auth/callback/:path', function (req, res) {
+  processCallback(req, res, req.params.path);
 });
+app.get('/auth/callback', function (req, res) {
+  processCallback(req, res, "");
+});
+
+
 app.get('/logout', function (req, res) {
   req.session.token = null;
   res.redirect('/');
