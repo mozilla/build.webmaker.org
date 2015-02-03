@@ -1,7 +1,7 @@
 var React = require("react");
 var Router = require("react-router");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
-var { AuthBlock, AuthMixin } = require("./auth.jsx");
+var { AuthBlock, AuthMixin, auth } = require("./auth.jsx");
 var getJSON = require("./getJSON.jsx");
 var MentionsApp = require("./mentions.jsx");
 
@@ -319,6 +319,13 @@ var Upcoming = React.createClass({
 
 var Dashboard = React.createClass({
   mixins: [AuthMixin],
+  getInitialState: function() {
+    var handle = auth.getCurrentUser();
+    if (!handle) return {};
+    return {
+      handle: handle
+    };
+  },
   render: function() {
     return (
       <div id="dashboard">
@@ -326,7 +333,7 @@ var Dashboard = React.createClass({
           <h2>Dashboard for {this.state.details.name}</h2>
         </div>
         <div className="main">
-          <MentionsApp handle="davidascher"/>
+          <MentionsApp handle={this.state.handle}/>
         </div>
       </div>
     );

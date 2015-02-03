@@ -87,10 +87,18 @@ var auth = {
       return { loggedIn: false, details: null };
     }
   },
+  getCurrentUser: function() {
+    var state = this.onLoad();
+    if (state.details && state.details.login) {
+      return state.details.login;
+    }
+    return "";
+  },
   login: function() {
-    if (location.hostname === "localhost") { /* make debugging easier */
+    if (location.hostname === "localhostX") { /* make debugging easier */
       localStorage.github = JSON.stringify({
-        name: "localhost user"
+        name: "pretend davidascher",
+        handle: "davidascher"
       });
       docCookies.setItem("github", "j="+localStorage.github);
       location.reload();
@@ -139,4 +147,5 @@ var AuthBlock = React.createClass({
 
 module.exports.AuthBlock = AuthBlock;
 module.exports.AuthMixin = AuthMixin;
+module.exports.auth = auth;
 

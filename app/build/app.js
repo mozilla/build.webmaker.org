@@ -65,6 +65,7 @@ var _require = require("./auth.jsx");
 
 var AuthBlock = _require.AuthBlock;
 var AuthMixin = _require.AuthMixin;
+var auth = _require.auth;
 var getJSON = require("./getJSON.jsx");
 var MentionsApp = require("./mentions.jsx");
 
@@ -605,6 +606,13 @@ var Upcoming = React.createClass({
 var Dashboard = React.createClass({
   displayName: "Dashboard",
   mixins: [AuthMixin],
+  getInitialState: function () {
+    var handle = auth.getCurrentUser();
+    if (!handle) return {};
+    return {
+      handle: handle
+    };
+  },
   render: function () {
     return React.createElement(
       "div",
@@ -622,7 +630,7 @@ var Dashboard = React.createClass({
       React.createElement(
         "div",
         { className: "main" },
-        React.createElement(MentionsApp, { handle: "davidascher" })
+        React.createElement(MentionsApp, { handle: this.state.handle })
       )
     );
   }
@@ -949,11 +957,19 @@ var auth = {
       return { loggedIn: false, details: null };
     }
   },
+  getCurrentUser: function () {
+    var state = this.onLoad();
+    if (state.details && state.details.login) {
+      return state.details.login;
+    }
+    return "";
+  },
   login: function () {
-    if (location.hostname === "localhost") {
+    if (location.hostname === "localhostX") {
       /* make debugging easier */
       localStorage.github = JSON.stringify({
-        name: "localhost user"
+        name: "pretend davidascher",
+        handle: "davidascher"
       });
       docCookies.setItem("github", "j=" + localStorage.github);
       location.reload();
@@ -1017,6 +1033,7 @@ var AuthBlock = React.createClass({
 
 module.exports.AuthBlock = AuthBlock;
 module.exports.AuthMixin = AuthMixin;
+module.exports.auth = auth;
 
 },{"react":201}],4:[function(require,module,exports){
 "use strict";
@@ -1062,6 +1079,10 @@ var ReactFireMixin = require("reactfire");
 var Firebase = require("client-firebase");
 // var readCookie  = require("./readcookie.js");
 var GitHubPerson = require("./GitHubPerson.jsx");
+var _require = require("./auth.jsx");
+
+var auth = _require.auth;
+
 
 var Mention = React.createClass({
   displayName: "Mention",
@@ -1149,7 +1170,7 @@ var Mention = React.createClass({
       repo_name = repo_name.slice(0, repo_name.indexOf("/issues/"));
     }
     if (this.props.question === "mention") {
-      var loggedinUser = "davidascher"; // XXX readCookie("githubuser");
+      var loggedinUser = auth.getCurrentUser();
       var dismiss = this.dismiss.bind(this, this.props.issue_id);
       var trashcan;
       if (loggedinUser === this.props.handle) {
@@ -1324,7 +1345,7 @@ var MentionsApp = React.createClass({
 
 module.exports = MentionsApp;
 
-},{"./GitHubPerson.jsx":1,"client-firebase":11,"react":201,"reactfire":202}],6:[function(require,module,exports){
+},{"./GitHubPerson.jsx":1,"./auth.jsx":3,"client-firebase":11,"react":201,"reactfire":202}],6:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
