@@ -75,10 +75,10 @@ var routes = {
 /**
  * Main routes.
  */
-app.post('/add', routes.schedule.createPost);
-app.get('/now', routes.schedule.now);
-app.get('/next', routes.schedule.next);
-app.get('/upcoming', routes.schedule.upcoming);
+app.post('/api/add', routes.schedule.createPost);
+app.get('/api/now', routes.schedule.now);
+app.get('/api/next', routes.schedule.next);
+app.get('/api/upcoming', routes.schedule.upcoming);
 app.get('/api/user/:username', function(req, res) {
   github.getUserInfo(req.params.username, function(err, body) {
     if (err) res.redirect('/500');
@@ -93,7 +93,7 @@ function oauthCB(req, res, path) {
     baseURL: secrets.github.host,
     callbackURI: secrets.github.callbackURL + '/' + path,
     loginURI: '/login',
-    scope: ''
+    scope: 'public_repo' // we need this to be able to create issues.
   });
   oauth.login(req, res);
 }
@@ -122,7 +122,6 @@ function processCallback(req, res, path) {
       // Get User information, and send it in a cookie
       github.getUserFromToken(body.access_token, function(err, body) {
         if (!err) {
-          req.session.token = body.access_token;
           // For some reason, this results in a cookie w/ "j$3A" at the front, which confuses me:
           //     "github=j%3A%7B%22body%22%3A%7B%22login... ....qTKzGvAWm5ElZZ9PwUtZs4FAyDkOPtno9480FIX1P0A; path=/; expires=Mon, 02 Feb 2015 19:32:02 GMT; httponly"
           res.cookie('github', body, { maxAge: 900000 });

@@ -71,7 +71,7 @@ var MentionsApp = require("./mentions.jsx");
 
 // XXX get it from a config file in the Gulp file?
 // var APIServer = "http://1c75f1df.ngrok.com";
-var APIServer = "";
+var APIServer = "/api";
 var App = React.createClass({
   displayName: "App",
   getInitialState: function () {
@@ -251,7 +251,7 @@ var Add = React.createClass({
         { id: "add" },
         React.createElement(
           "form",
-          { method: "POST" },
+          { method: "POST", action: "/api/add" },
           React.createElement(
             "div",
             { className: "question" },

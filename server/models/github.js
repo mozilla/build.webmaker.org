@@ -20,7 +20,7 @@ function Github(client, secret) {
   _this.secret = secret;
   _this.token = secrets.github.token;
   _this.host = 'https://api.github.com';
-  _this.repo = '/repos/mozillafoundation/plan';
+  _this.repo = '/repos/MozillaFoundation/plan';
   _this.cache = lru({
     max: 100,
     maxAge: 1000 * 60 * 5

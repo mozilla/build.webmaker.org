@@ -7,7 +7,7 @@ var MentionsApp = require("./mentions.jsx");
 
 // XXX get it from a config file in the Gulp file?
 // var APIServer = "http://1c75f1df.ngrok.com";
-var APIServer = "";
+var APIServer = "/api";
 var App = React.createClass({
     getInitialState: function() {
       return {
@@ -82,7 +82,7 @@ var Add = React.createClass({
     if (this.state.loggedIn) {
       body = (
         <div id="add">
-          <form method="POST">
+          <form method="POST" action="/api/add">
             <div className="question">
               <h2>Give your project a title.</h2>
               <p>In as few words as possible, describe what this project is about.</p>
