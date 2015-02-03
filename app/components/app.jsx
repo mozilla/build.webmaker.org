@@ -45,7 +45,7 @@ var App = React.createClass({
             </ul>
 
             <li className="icon-involved">
-            <a href="/involved">Get Involved</a></li>
+            <a href="https://webmaker.org/en-US/getinvolved">Get Involved</a></li>
           </ul>
           <input type="checkbox" id="nav-trigger" className="nav-trigger" />
           <label htmlFor="nav-trigger"></label>
