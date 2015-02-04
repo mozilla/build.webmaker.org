@@ -3,10 +3,11 @@ var getJSON = require("./getJSON.jsx");
 var Mentions = require("./mentions.jsx");
 var { auth, AuthMixin } = require("./auth.jsx");
 var { Link } = require("react-router");
+var pluralize = require("pluralize");
 
 var GithubSearch = {
   getInitialState: function() {
-    return {items: [], total_count: 0}
+    return {items: [], total_count: 0};
   },
   componentDidMount: function() {
     var fragment = this.makeFragment();
@@ -32,19 +33,28 @@ var GithubIssuesSearch = React.createClass({
     var planPrefix = "https://api.github.com/repos/MozillaFoundation/plan/issues";
     var issues = this.state.items.filter(function(item) {
       // filter out the plan issues, called 'initiatives'
-      return (item.url.indexOf(planPrefix) != 0);
-    })
-    var issues = issues.map(function(item) {
-      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+      return (item.url.indexOf(planPrefix) !== 0);
     });
-    return (
-      <div id="dashboard">
-        <h2>{issues.length} open issues assigned</h2>
-        <ul>
-          {issues}
-        </ul>
-      </div>
-    );
+    issues = issues.map(function(item) {
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>;
+    });
+    if (issues.length) {
+      var noun = pluralize("issue", issues.length);
+      return (
+        <div id="openissues">
+          <h2>{issues.length} open {noun} assigned</h2>
+          <ul>
+            {issues}
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div id="openissues">
+          <h2>No open issues assigned, nice!</h2>
+        </div>
+      );
+    }
   }
 });
 
@@ -57,16 +67,25 @@ var GithubPRSearch = React.createClass({
   },
   render: function() {
     var issues = this.state.items.map(function(item) {
-      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>;
     });
-    return (
-      <div id="dashboard">
-        <h2>{this.state.total_count} open pull requests</h2>
-        <ul>
-          {issues}
-        </ul>
-      </div>
-    );
+    if (issues.length) {
+      var noun = pluralize("request", issues.length);
+      return (
+        <div id="openprs">
+          <h2>{issues.length} open pull {noun}</h2>
+          <ul>
+            {issues}
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div id="openprs">
+          <h2>No open pull requests, nice!</h2>
+        </div>
+      );
+    }
   }
 });
 var GithubInitiativesSearch = React.createClass({
@@ -77,16 +96,25 @@ var GithubInitiativesSearch = React.createClass({
   },
   render: function() {
     var issues = this.state.items.map(function(item) {
-      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>;
     });
-    return (
-      <div id="dashboard">
-        <h2>{this.state.total_count} open initiatives</h2>
-        <ul>
-          {issues}
-        </ul>
-      </div>
-    );
+    if (issues.length) {
+      var noun = pluralize("initiative", issues.length);
+      return (
+        <div id="openinitiatives">
+          <h2>{issues.length} open {nound} assigned</h2>
+          <ul>
+            {issues}
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div id="openinitiatives">
+          <h2>No open initiatives assigned.</h2>
+        </div>
+      );
+    }
   }
 });
 
@@ -96,18 +124,15 @@ var Dashboard = React.createClass({
   mixins: [AuthMixin],
   getInitialState: function() {
     var handle = auth.getCurrentUser();
-    if (!handle) return {};
+    if (!handle) {
+      return {};
+    }
     return {
       handle: handle
     };
   },
   render: function() {
-    var email = "davida@mozillafoundation.org"; // get emails from github?
-    var escapedemail = encodeURIComponent(email);
     var handle = this.state.handle;
-    var githuburl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A"+handle+"+state%3Aopen&type=Issues&ref=searchresults";
-    var githubprurl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A"+handle+"+state%3Aopen+type%3Apr&type=Issues&ref=searchresults";
-    var bzurl = "https://bugzilla.mozilla.org/buglist.cgi?resolution=---&emailtype1=exact&query_format=advanced&emailassigned_to1=1&email1="+email;
     return (
       <div id="dashboard">
         <div className="header">
@@ -117,11 +142,10 @@ var Dashboard = React.createClass({
           <GithubInitiativesSearch handle={handle}/>
           <GithubPRSearch handle={handle}/>
           <GithubIssuesSearch handle={handle}/>
-          <Mentions handle={this.state.handle}/>
+          <Mentions handle={handle}/>
         </div>
       </div>
     );
-    /* <h3><a href={bzurl}>Open Bugzilla Bugs</a> assigned to <i>{email}</i></h3> */
   }
 });
 
@@ -147,7 +171,6 @@ var Splash = React.createClass({
             <div className="center">
               <h4>Our Mission</h4>
             </div>
-
             <div className="columns">
               <p>The Mozilla Foundation is a non-profit organization 
               that promotes openness, innovation and participation on 
