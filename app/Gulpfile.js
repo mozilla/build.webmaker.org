@@ -115,24 +115,14 @@ gulp.task('less-app', function() {
 gulp.task('app', ['lint-app', /*'jscs-app',*/ 'minify-app', 'less-app']);
 
 
-/**
- * Automatic running of a live-server for the app
- */
-gulp.task('run-app', function() {
-  var liveServer = require("live-server");
-  var dir = cwd + "/public";
-  var suppressBrowser = false;
-  liveServer.start(8080, dir, suppressBrowser);
-});
+// /**
+//  * Automatic running of a live-server for the app
+//  */
+// gulp.task('run-app', function() {
+//   var liveServer = require("live-server");
+//   var dir = cwd + "/public";
+//   var suppressBrowser = false;
+//   liveServer.start(8080, dir, suppressBrowser);
+// });
 
 
-/**
- * Automatic rebuilding when .jsx or .less files are changed
- */
-gulp.task('watch-app', function() {
-  // Changes relevant to react:
-  watch(jsxSrc, function() { gulp.start('lint-app'); });
-  watch(jsxSrc, function() { gulp.start('minify-app'); });
-  // Style changes:
-  watch(lessSrc, function() { gulp.start('less-app'); });
-});

@@ -52,6 +52,7 @@ exports.now = function(req, res) {
   });
 };
 
+
 /**
  * "Next Sprint" route handler.
  *

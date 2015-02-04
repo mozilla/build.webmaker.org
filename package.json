@@ -19,7 +19,7 @@
     "url": "http://github.com/mozillafoundation/build.webmaker.org"
   },
   "scripts": {
-    "postinstall": "gulp build minify-app",
+    "Xpostinstall": "gulp build",
     "start": "node server.js",
     "build": "gulp"
   },
@@ -65,5 +65,8 @@
     "superagent": "^0.21.0",
     "vinyl-source-stream": "^1.0.0",
     "vinyl-transform": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp-express": "^0.1.7"
   }
 }
