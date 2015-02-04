@@ -301,6 +301,39 @@ Github.prototype.getUserInfo = function(username, callback) {
   });
 };
 
+
+Github.prototype.search = function(q, sort, order, callback) {
+  var _this = this;
+
+  // Cache target
+  var path = "?q="+encodeURIComponent(q) + "+org:MozillaFoundation+repo:plan" + 
+      "&sort="+encodeURIComponent(sort) +
+      "&order="+encodeURIComponent(order);
+  var url = "https://api.github.com/search/issues" + path;
+  console.log("calling url", url);
+  var copy = _this.cache.get(url);
+  if (typeof copy !== 'undefined') {
+    return callback(null, copy);
+  }
+
+  // Request from API
+  request({
+    method: 'GET',
+    uri: url,
+    headers: {
+      'User-Agent': 'build.webmaker.org',
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: 'token ' + _this.token
+    },
+    json: {}
+  }, function(err, res, body) {
+    if (err) return callback(err);
+
+    // Set cache & return
+    _this.cache.set(url, body);
+    callback(err, body);
+  });
+};
 /**
  * Export
  */

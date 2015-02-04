@@ -52,7 +52,7 @@ app.use(sessions({
   duration: 24 * 60 * 60 * 1000,
   activeDuration: 1000 * 60 * 5
 }));
-app.use(compress());
+app.use(compress()); // Note: this messes up JSON view in firefox dev tools
 app.use(express.static(
   path.join(__dirname, './app/public'), { maxAge: 1000 * 3600 * 24 * 365.25 })
 );
@@ -79,6 +79,15 @@ app.post('/api/add', routes.schedule.createPost);
 app.get('/api/now', routes.schedule.now);
 app.get('/api/next', routes.schedule.next);
 app.get('/api/upcoming', routes.schedule.upcoming);
+app.get('/api/github/search/issues', function(req, res) {
+  var sort = req.query.sort || "updated";
+  var order = req.query.order || "asc";
+  github.search(req.query.q, sort, order, function(err, body) {
+  if (err) res.redirect('/500');
+  res.type('application/json; charset=utf-8').send(body);
+  // res.type('application/json').send(body);
+});
+});
 app.get('/api/user/:username', function(req, res) {
   github.getUserInfo(req.params.username, function(err, body) {
     if (err) res.redirect('/500');

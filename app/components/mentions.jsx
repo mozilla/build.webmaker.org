@@ -161,7 +161,8 @@ var MentionsList = React.createClass({
       }
     }
     if (bits.length > 0) {
-      return (<div><h3 className="mentionsheading">{this.props.title}</h3>
+      return (<div><h2 className="mentionsheading">{this.props.title}</h2>
+                   <p className="subheading">{this.props.desc}</p>
                    <ul className="mentionsul"> {bits} </ul>
               </div>);
     } else {
@@ -170,7 +171,7 @@ var MentionsList = React.createClass({
   }
 });
 
-var MentionsApp = React.createClass({
+var Mentions = React.createClass({
   mixins: [ReactFireMixin],
 
   getInitialState: function() {
@@ -190,11 +191,11 @@ var MentionsApp = React.createClass({
     return (
       <div>
         <MentionsList title="Pending Flags" type="flag" handle={this.state.handle} mentions={this.state.mentions}/>
-        <MentionsList title="Pending Mentions" type="mention" handle={this.state.handle} mentions={this.state.mentions}/>
+        <MentionsList title="Pending Mentions" desc="(mentions since you commented on an issue or dismissed them using the trash icon)" type="mention" handle={this.state.handle} mentions={this.state.mentions}/>
       </div>
     );
   }
 });
 
 
-module.exports = MentionsApp;
+module.exports = Mentions;

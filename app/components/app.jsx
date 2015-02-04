@@ -3,7 +3,7 @@ var Router = require("react-router");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
 var { AuthBlock, AuthMixin, auth } = require("./auth.jsx");
 var getJSON = require("./getJSON.jsx");
-var MentionsApp = require("./mentions.jsx");
+var Mentions = require("./mentions.jsx");
 
 // XXX get it from a config file in the Gulp file?
 // var APIServer = "http://1c75f1df.ngrok.com";
@@ -315,6 +315,93 @@ var Upcoming = React.createClass({
     );
   }
 });
+var GithubSearch = {
+  getInitialState: function() {
+    return {items: [], total_count: 0}
+  },
+  componentDidMount: function() {
+    var fragment = this.makeFragment();
+    var self = this;
+    getJSON("/api/github/search/issues" + fragment,
+      function(data) {
+        if (self.isMounted()) {
+          self.setState(data);
+        }
+      },
+      function(err) {
+      }
+    );
+  },
+};
+
+var GithubIssuesSearch = React.createClass({
+  mixins: [GithubSearch],
+  makeFragment: function() {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle + " state:open");
+  },
+  render: function() {
+    var planPrefix = "https://api.github.com/repos/MozillaFoundation/plan/issues";
+    var issues = this.state.items.filter(function(item) {
+      // filter out the plan issues, called 'initiatives'
+      return (item.url.indexOf(planPrefix) != 0);
+    })
+    var issues = issues.map(function(item) {
+      console.log(item);
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+    });
+    return (
+      <div id="dashboard">
+        <h2>{issues.length} open issues assigned</h2>
+        <ul>
+          {issues}
+        </ul>
+      </div>
+    );
+  }
+});
+
+
+var GithubPRSearch = React.createClass({
+  mixins: [GithubSearch],
+  makeFragment: function() {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle) +
+      "+state:open+type:pr";
+  },
+  render: function() {
+    var issues = this.state.items.map(function(item) {
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+    });
+    return (
+      <div id="dashboard">
+        <h2>{this.state.total_count} open pull requests</h2>
+        <ul>
+          {issues}
+        </ul>
+      </div>
+    );
+  }
+});
+var GithubInitiativesSearch = React.createClass({
+  mixins: [GithubSearch],
+  makeFragment: function() {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle) +
+      "+state:open+org:MozillaFoundation+repo:plan";
+  },
+  render: function() {
+    var issues = this.state.items.map(function(item) {
+      return <li key={item.html_url}><a href={item.html_url}>{item.title}</a></li>
+    });
+    return (
+      <div id="dashboard">
+        <h2>{this.state.total_count} open initiatives</h2>
+        <ul>
+          {issues}
+        </ul>
+      </div>
+    );
+  }
+});
+
 
 
 var Dashboard = React.createClass({
@@ -327,16 +414,26 @@ var Dashboard = React.createClass({
     };
   },
   render: function() {
+    var email = "davida@mozillafoundation.org"; // get emails from github?
+    var escapedemail = encodeURIComponent(email);
+    var handle = this.state.handle;
+    var githuburl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A"+handle+"+state%3Aopen&type=Issues&ref=searchresults";
+    var githubprurl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A"+handle+"+state%3Aopen+type%3Apr&type=Issues&ref=searchresults";
+    var bzurl = "https://bugzilla.mozilla.org/buglist.cgi?resolution=---&emailtype1=exact&query_format=advanced&emailassigned_to1=1&email1="+email;
     return (
       <div id="dashboard">
         <div className="header">
           <h2>Dashboard for {this.state.details.name}</h2>
         </div>
         <div className="main">
-          <MentionsApp handle={this.state.handle}/>
+          <GithubInitiativesSearch handle={handle}/>
+          <GithubPRSearch handle={handle}/>
+          <GithubIssuesSearch handle={handle}/>
+          <Mentions handle={this.state.handle}/>
         </div>
       </div>
     );
+    /* <h3><a href={bzurl}>Open Bugzilla Bugs</a> assigned to <i>{email}</i></h3> */
   }
 });
 

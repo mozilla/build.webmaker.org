@@ -11,6 +11,7 @@ var GitHubPerson = React.createClass({
     return {
       username: "",
       name: "",
+      html_url: "",
       avatar_url: ""
     };
   },
@@ -18,6 +19,7 @@ var GitHubPerson = React.createClass({
   componentDidMount: function () {
     var handle = this.props.handle.toLowerCase();
     var that = this;
+    // XXX Ensure this is cached
     getJSON("/api/user/" + handle, function (data) {
       if (data.avatar_url.indexOf("?") !== -1) {
         data.avatar_url = data.avatar_url + "&s=64";
@@ -27,7 +29,7 @@ var GitHubPerson = React.createClass({
       if (that.isMounted()) {
         that.setState({
           username: data.login,
-          htlm_url: data.html_url,
+          html_url: data.html_url,
           avatar_url: data.avatar_url,
           name: data.name
         });
@@ -39,11 +41,11 @@ var GitHubPerson = React.createClass({
 
   render: function () {
     return React.createElement(
-      "div",
-      { className: "profile-pic" },
+      "a",
+      { href: this.state.html_url, title: this.state.name },
       React.createElement(
-        "a",
-        { href: this.state.html_url, title: this.state.name },
+        "div",
+        { className: "profile-pic" },
         React.createElement("img", { className: "profile-pic-btn", src: this.state.avatar_url })
       )
     );
@@ -67,7 +69,7 @@ var AuthBlock = _require.AuthBlock;
 var AuthMixin = _require.AuthMixin;
 var auth = _require.auth;
 var getJSON = require("./getJSON.jsx");
-var MentionsApp = require("./mentions.jsx");
+var Mentions = require("./mentions.jsx");
 
 // XXX get it from a config file in the Gulp file?
 // var APIServer = "http://1c75f1df.ngrok.com";
@@ -601,6 +603,134 @@ var Upcoming = React.createClass({
     );
   }
 });
+var GithubSearch = {
+  getInitialState: function () {
+    return { items: [], total_count: 0 };
+  },
+  componentDidMount: function () {
+    var fragment = this.makeFragment();
+    var self = this;
+    getJSON("/api/github/search/issues" + fragment, function (data) {
+      if (self.isMounted()) {
+        self.setState(data);
+      }
+    }, function (err) {});
+  } };
+
+var GithubIssuesSearch = React.createClass({
+  displayName: "GithubIssuesSearch",
+  mixins: [GithubSearch],
+  makeFragment: function () {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle + " state:open");
+  },
+  render: function () {
+    var planPrefix = "https://api.github.com/repos/MozillaFoundation/plan/issues";
+    var issues = this.state.items.filter(function (item) {
+      // filter out the plan issues, called 'initiatives'
+      return item.url.indexOf(planPrefix) != 0;
+    });
+    var issues = issues.map(function (item) {
+      console.log(item);
+      return React.createElement(
+        "li",
+        { key: item.html_url },
+        React.createElement(
+          "a",
+          { href: item.html_url },
+          item.title
+        )
+      );
+    });
+    return React.createElement(
+      "div",
+      { id: "dashboard" },
+      React.createElement(
+        "h2",
+        null,
+        issues.length,
+        " open issues assigned"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        issues
+      )
+    );
+  }
+});
+
+
+var GithubPRSearch = React.createClass({
+  displayName: "GithubPRSearch",
+  mixins: [GithubSearch],
+  makeFragment: function () {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle) + "+state:open+type:pr";
+  },
+  render: function () {
+    var issues = this.state.items.map(function (item) {
+      return React.createElement(
+        "li",
+        { key: item.html_url },
+        React.createElement(
+          "a",
+          { href: item.html_url },
+          item.title
+        )
+      );
+    });
+    return React.createElement(
+      "div",
+      { id: "dashboard" },
+      React.createElement(
+        "h2",
+        null,
+        this.state.total_count,
+        " open pull requests"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        issues
+      )
+    );
+  }
+});
+var GithubInitiativesSearch = React.createClass({
+  displayName: "GithubInitiativesSearch",
+  mixins: [GithubSearch],
+  makeFragment: function () {
+    return "?q=" + encodeURIComponent("assignee:" + this.props.handle) + "+state:open+org:MozillaFoundation+repo:plan";
+  },
+  render: function () {
+    var issues = this.state.items.map(function (item) {
+      return React.createElement(
+        "li",
+        { key: item.html_url },
+        React.createElement(
+          "a",
+          { href: item.html_url },
+          item.title
+        )
+      );
+    });
+    return React.createElement(
+      "div",
+      { id: "dashboard" },
+      React.createElement(
+        "h2",
+        null,
+        this.state.total_count,
+        " open initiatives"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        issues
+      )
+    );
+  }
+});
+
 
 
 var Dashboard = React.createClass({
@@ -614,6 +744,12 @@ var Dashboard = React.createClass({
     };
   },
   render: function () {
+    var email = "davida@mozillafoundation.org"; // get emails from github?
+    var escapedemail = encodeURIComponent(email);
+    var handle = this.state.handle;
+    var githuburl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A" + handle + "+state%3Aopen&type=Issues&ref=searchresults";
+    var githubprurl = "https://github.com/search?utf8=%E2%9C%93&q=assignee%3A" + handle + "+state%3Aopen+type%3Apr&type=Issues&ref=searchresults";
+    var bzurl = "https://bugzilla.mozilla.org/buglist.cgi?resolution=---&emailtype1=exact&query_format=advanced&emailassigned_to1=1&email1=" + email;
     return React.createElement(
       "div",
       { id: "dashboard" },
@@ -630,9 +766,13 @@ var Dashboard = React.createClass({
       React.createElement(
         "div",
         { className: "main" },
-        React.createElement(MentionsApp, { handle: this.state.handle })
+        React.createElement(GithubInitiativesSearch, { handle: handle }),
+        React.createElement(GithubPRSearch, { handle: handle }),
+        React.createElement(GithubIssuesSearch, { handle: handle }),
+        React.createElement(Mentions, { handle: this.state.handle })
       )
     );
+    /* <h3><a href={bzurl}>Open Bugzilla Bugs</a> assigned to <i>{email}</i></h3> */
   }
 });
 
@@ -1297,9 +1437,14 @@ var MentionsList = React.createClass({
         "div",
         null,
         React.createElement(
-          "h3",
+          "h2",
           { className: "mentionsheading" },
           this.props.title
+        ),
+        React.createElement(
+          "p",
+          { className: "subheading" },
+          this.props.desc
         ),
         React.createElement(
           "ul",
@@ -1315,8 +1460,8 @@ var MentionsList = React.createClass({
   }
 });
 
-var MentionsApp = React.createClass({
-  displayName: "MentionsApp",
+var Mentions = React.createClass({
+  displayName: "Mentions",
   mixins: [ReactFireMixin],
 
   getInitialState: function () {
@@ -1337,13 +1482,13 @@ var MentionsApp = React.createClass({
       "div",
       null,
       React.createElement(MentionsList, { title: "Pending Flags", type: "flag", handle: this.state.handle, mentions: this.state.mentions }),
-      React.createElement(MentionsList, { title: "Pending Mentions", type: "mention", handle: this.state.handle, mentions: this.state.mentions })
+      React.createElement(MentionsList, { title: "Pending Mentions", desc: "(mentions since you commented on an issue or dismissed them using the trash icon)", type: "mention", handle: this.state.handle, mentions: this.state.mentions })
     );
   }
 });
 
 
-module.exports = MentionsApp;
+module.exports = Mentions;
 
 },{"./GitHubPerson.jsx":1,"./auth.jsx":3,"client-firebase":11,"react":201,"reactfire":202}],6:[function(require,module,exports){
 /*!

@@ -7,6 +7,7 @@ var GitHubPerson = React.createClass({
     return {
       username: "",
       name: "",
+      html_url: "",
       avatar_url: ""
     };
   },
@@ -14,6 +15,7 @@ var GitHubPerson = React.createClass({
   componentDidMount: function() {
     var handle = this.props.handle.toLowerCase();
     var that = this;
+    // XXX Ensure this is cached
     getJSON("/api/user/"+handle, function(data) {
       if (data.avatar_url.indexOf("?") !== -1) {
         data.avatar_url = data.avatar_url + "&s=64";
@@ -23,7 +25,7 @@ var GitHubPerson = React.createClass({
       if (that.isMounted()) {
         that.setState({
         username: data.login,
-        htlm_url: data.html_url,
+        html_url: data.html_url,
         avatar_url: data.avatar_url,
         name: data.name
       });
@@ -35,11 +37,11 @@ var GitHubPerson = React.createClass({
 
   render: function() {
     return (
-        <div className="profile-pic">
-          <a href={this.state.html_url} title={this.state.name}>
+        <a href={this.state.html_url} title={this.state.name}>
+          <div className="profile-pic">
             <img className="profile-pic-btn" src={this.state.avatar_url}/>
-          </a>
-        </div>
+          </div>
+        </a>
       );
   }
 });
