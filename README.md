@@ -1,25 +1,39 @@
-# The  Mozilla Foundation Client-Side Prototype 
+## build.webmaker.org
 
-Clone this repository if you're starting a new MoFo client-side application.
+[![Build Status](https://travis-ci.org/mozilla/build.webmaker.org.svg?branch=master)](https://travis-ci.org/mozilla/build.webmaker.org)
 
-The repo contains all the technologies we talk about in the [MoFo Engineering Handbook](https://github.com/MozillaFoundation/MoFo-Engineering-Handbook) and contains an example application that you can use as springboard to develop your own application on, by rewriting the bits that are in the example application to suit your needs, and extending it in accordance with the policies and guides outlined in the handbook.
+Build is a site that we use to track what we are working on now and in the future. It provides a central resource for staff and contributors who are interested in the who, what, and how we build product for Webmaker.
 
-**Note**: This repo is still under development.
+## Getting Started
 
-## Using the current implementation
+#### Clone & Install
+```bash
+git clone git@github.com:MozillaFoundation/plan.git
+cd plan
+cp env.sample .env
+npm install
+```
 
-Clone this repo, then run `npm install` to get everything set up.
+#### Edit .env
+* `PLAN_SESSION_SECRET` should be whatever you want it to be.
+* `PLAN_GITHUB_CLIENTID` and `PLAN_GITHUB_CLIENTSECRET` should be obtained by creating a new Developer Application in Github (https://github.com/settings/applications). For __Authorization callback URL__, make sure you use `/auth/github/callback` prefixed by the address of the host you use for the app.
+* `PLAN_GITHUB_TOKEN` is optional but will help avoid rate limiting, and is a Personal Access Token generated on the same page.
 
-## Development with live reloading
+#### Run
+If you have [nodemon](https://github.com/remy/nodemon) installed, you can start the server by running:
 
-For a tight feedback loop between code changes and updates in the browser, the code uses `gulp` for compilation and `gulp watch` for looking for file changes that will kick off recompiles.
+```bash
+nodemon app.js
+```
 
-If you just want to compile run `$> gulp`. For convenient dev work, you can use `$> gulp watch` instead, which will run the build tasks as well as set up file change watching on the app and shared directories, automatically starting up a live-reloading server for the gallery/editor apps.
+Otherwise, you can start the server by simply running (note, you will have to restart the process to see changes):
+```bash
+node app.js
+```
 
-Editing any .less or .jsx code should result in live recompiles, with the browser automatically updating thanks to the magic of live-server's use of websockets.
+Once running you can view the local server by navigating to: 'http://localhost:3000'. If you prefer a different port, you can add a `PORT` variable to `.env`.
 
-## Current implementation details
-
-This repo currently implements a single client-side applications, consuming data from file, rather than from an API endpoint. Its code is found in the `app` directory, with most subdirectories named intuitively. The actual "deploy" content gets written to the `app/public` directory. As the app is built using [React](http://facebook.github.io/react) most of the important code can be found in the `components` and `mixins` directories.
-
-If the [Webmaker Login service](http://github.com/mozilla/login.webmaker.org) is running (on port 3000), webmaker login is used to control whether or not "tiles" have editable titles and author fields.
+## Testing
+```bash
+npm test
+```

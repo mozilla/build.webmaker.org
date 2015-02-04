@@ -12,11 +12,11 @@
   "license": "MPL-2.0",
   "author": {
     "name": "Mozilla",
-    "url": "http://mozillafoundation.github.io/mofo-example-app"
+    "url": "http://github.com/mozillafoundation/build.webmaker.org"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/mozillafoundation/mofo-example-app"
+    "url": "http://github.com/mozillafoundation/build.webmaker.org"
   },
   "scripts": {
     "postinstall": "gulp build minify-app",
