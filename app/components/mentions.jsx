@@ -3,7 +3,6 @@
 var React = require("react");
 var ReactFireMixin = require("reactfire");
 var Firebase = require("client-firebase");
-// var readCookie  = require("./readcookie.js");
 var GitHubPerson = require("./GitHubPerson.jsx");
 var {auth} = require("./auth.jsx");
 

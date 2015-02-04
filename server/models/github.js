@@ -306,7 +306,7 @@ Github.prototype.search = function(q, sort, order, callback) {
   var _this = this;
 
   // Cache target
-  var path = "?q="+encodeURIComponent(q) + "+org:MozillaFoundation+repo:plan" + 
+  var path = "?q="+encodeURIComponent(q) +
       "&sort="+encodeURIComponent(sort) +
       "&order="+encodeURIComponent(order);
   var url = "https://api.github.com/search/issues" + path;
