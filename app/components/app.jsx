@@ -364,20 +364,20 @@ var Splash = React.createClass({
             </div>
 
             <div className="columns">
-              <p>The Mozilla Foundation is a non-profit organization
-              that promotes openness, innovation and participation on
-              the Internet. We promote the values of an open Internet
+              <p>The Mozilla Foundation is a non-profit organization 
+              that promotes openness, innovation and participation on 
+              the Internet. We promote the values of an open Internet 
               to the broader world.</p>
-              <p>Mozilla is best known for the Firefox browser, but we
-              advance our mission through other software projects, grants
+              <p>Mozilla is best known for the Firefox browser, but we 
+              advance our mission through other software projects, grants 
               and engagement and education efforts such as Mozilla Webmaker.</p>
-              <p>Webmaker is all about building a new generation of
-              digital creators and webmakers, giving people the tools
-              and skills they need to move from using the web to actively
+              <p>Webmaker is all about building a new generation of 
+              digital creators and webmakers, giving people the tools 
+              and skills they need to move from using the web to actively 
               making the web.</p>
-              <p>If you're interested in supporting our efforts, please
-              consider getting involved with Mozilla Webmaker, making
-              a donation or getting involved with the
+              <p>If you're interested in supporting our efforts, please 
+              consider getting involved with Mozilla Webmaker, making 
+              a donation or getting involved with the 
               Mozilla community.</p>
             </div>
           </div>
