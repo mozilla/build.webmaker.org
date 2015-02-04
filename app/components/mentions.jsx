@@ -190,8 +190,8 @@ var Mentions = React.createClass({
   render: function() {
     return (
       <div>
-        <MentionsList title="Pending Flags" type="flag" handle={this.state.handle} mentions={this.state.mentions}/>
-        <MentionsList title="Pending Mentions" desc="(mentions since you commented on an issue or dismissed them using the trash icon)" type="mention" handle={this.state.handle} mentions={this.state.mentions}/>
+        <MentionsList title="Pending flags" type="flag" handle={this.state.handle} mentions={this.state.mentions}/>
+        <MentionsList title="Possibly notable mentions" desc="(mentions since you commented on an issue or dismissed them using the trash icon)" type="mention" handle={this.state.handle} mentions={this.state.mentions}/>
       </div>
     );
   }
