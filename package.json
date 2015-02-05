@@ -19,7 +19,7 @@
     "url": "http://github.com/mozillafoundation/build.webmaker.org"
   },
   "scripts": {
-    "Xpostinstall": "gulp build",
+    "postinstall": "gulp build",
     "start": "node server.js",
     "build": "gulp"
   },
