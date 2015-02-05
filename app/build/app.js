@@ -338,7 +338,7 @@ var App = React.createClass({
             null,
             React.createElement(
               "a",
-              { href: "https://book.webmaker.org" },
+              { href: "http://book.webmaker.org" },
               "Process"
             )
           ),
@@ -348,7 +348,7 @@ var App = React.createClass({
             React.createElement(
               Link,
               { to: "design" },
-              "Design Assets"
+              "Design"
             )
           )
         ),
@@ -584,7 +584,7 @@ var Design = React.createClass({
         React.createElement(
           "h2",
           null,
-          "Design Assets"
+          "Design"
         )
       ),
       React.createElement(
@@ -596,7 +596,7 @@ var Design = React.createClass({
           React.createElement(
             "h2",
             { className: "clearfix" },
-            "Design Assets"
+            "Design"
           ),
           React.createElement(
             "p",
