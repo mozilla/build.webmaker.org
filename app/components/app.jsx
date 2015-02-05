@@ -41,8 +41,8 @@ var App = React.createClass({
             <li>&nbsp;</li>
             <li className="icon-how">How We Work</li>
             <ul>
-              <li><a href="https://book.webmaker.org">Process</a></li>
-              <li><Link to="design">Design Assets</Link></li>
+              <li><a href="http://book.webmaker.org">Process</a></li>
+              <li><Link to="design">Design</Link></li>
             </ul>
 
             <li className="icon-involved">

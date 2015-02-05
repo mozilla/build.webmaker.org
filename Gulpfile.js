@@ -13,7 +13,8 @@ var cwd = path.dirname(__filename);
 var jsxSrc = [
   cwd + '/app/components/**/*.js*',
   cwd + '/app/lib/**/*.js',
-  cwd + '/app/mixins/**/*.js'
+  cwd + '/app/mixins/**/*.js',
+  '!' + cwd + '/app/components/reactfire.min.js'
 ];
 
 var jscsSrc = [
@@ -42,7 +43,7 @@ gulp.task('bundle-app', function() {
   return browserify(cwd + '/app/components/app.jsx')
     .transform(to5ify)
     .transform(reactify)
-    // .transform(donottouch)
+    .transform(donottouch)
     .bundle()
     .pipe(source('app.js'))
     .pipe(gulp.dest(cwd + '/app/build/'));

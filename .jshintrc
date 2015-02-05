@@ -22,5 +22,5 @@
   "trailing": true,
   "undef": true,
   "unused": "vars",
-  "maxlen": 80
+  "maxlen": 132
 }
