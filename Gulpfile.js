@@ -25,6 +25,8 @@ var jscsSrc = [
 
 var lessSrc = cwd + '/app/less/**/*.less';
 
+var serverSrc = [cwd + '/server.js', cwd+'/server/**/*.js'];
+
 /**
  * Browserify bundling of app.
  */
@@ -150,8 +152,18 @@ gulp.task('reload-styles', ['less-app', 'server-kick-styles']);
  * Automatic rebuilding when .jsx or .less files are changed
  */
 gulp.task('liveserve', ['build'], function() {
+  gulp.start('build');
+  gulp.start('serve');
+});
+
+gulp.task('serve', function() {
   server.run({
       file: 'server.js'
+  });
+  // Changes relevant to server:
+  watch(serverSrc, function() {
+    server.notify();
+    console.log("Server restarted.");
   });
   // Changes relevant to react:
   watch(jsxSrc, function() {

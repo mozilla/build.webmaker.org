@@ -18,6 +18,8 @@ var flash = require('express-flash');
 var path = require('path');
 var cors = require('cors');
 var expressValidator = require('express-validator');
+var issueParser = require('./server/issueparser.js');
+var processHook = issueParser.processHook;
 
 /**
  * Import API keys from environment
@@ -153,6 +155,13 @@ app.get('/logout', function (req, res) {
   req.session.token = null;
   res.redirect('/');
 });
+
+
+/**
+ * Webhook handler (from github)
+ */
+
+ app.post('/postreceive', processHook);
 
 /**
  * 500 Error Handler.
