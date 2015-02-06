@@ -7,6 +7,7 @@ var { Now, Next } = require("./heartbeats.jsx");
 var Upcoming = require("./upcoming.jsx");
 var Homepage = require("./homepage.jsx");
 var Design = require("./design.jsx");
+var Audience = require("./audience.jsx");
 
 var App = React.createClass({
     getInitialState: function() {
@@ -32,6 +33,7 @@ var App = React.createClass({
               <Link to="upcoming">Upcoming</Link>
             </li>
             <li>&nbsp;</li>
+            <li className="icon-audience"><Link to="audience">Our Audience</Link></li>
             <li className="icon-strategy">
             <a href="https://wiki.mozilla.org/Webmaker/2015">Strategy</a></li>
             <li className="icon-dashboard">
@@ -78,6 +80,7 @@ var routes = (
     <Route name="next" handler={Next} path="next" title="Next Heartbeat"/>
     <Route name="upcoming" handler={Upcoming}/>
     <Route name="design" handler={Design}/>
+    <Route name="audience" handler={Audience}/>
     <DefaultRoute handler={Homepage}/>
   </Route>
 );
