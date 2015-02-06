@@ -39,6 +39,7 @@
     "express": "^4.11.2",
     "express-flash": "0.0.2",
     "express-validator": "^2.8.0",
+    "firebase": "^2.1.2",
     "github-oauth": "^0.2.1",
     "gulp": "^3.8.10",
     "gulp-concat": "^2.4.3",
