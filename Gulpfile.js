@@ -152,7 +152,6 @@ gulp.task('reload-styles', ['less-app', 'server-kick-styles']);
  * Automatic rebuilding when .jsx or .less files are changed
  */
 gulp.task('liveserve', ['build'], function() {
-  gulp.start('build');
   gulp.start('serve');
 });
 

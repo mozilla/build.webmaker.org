@@ -8,7 +8,6 @@ var Upcoming = require("./upcoming.jsx");
 var Homepage = require("./homepage.jsx");
 var Design = require("./design.jsx");
 
-
 var App = React.createClass({
     getInitialState: function() {
       return {
@@ -83,7 +82,7 @@ var routes = (
   </Route>
 );
 
-Router.run(routes, function(Handler) {
+Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(<Handler/>, document.getElementById("app"));
 });
 

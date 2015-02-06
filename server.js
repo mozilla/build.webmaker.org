@@ -18,8 +18,8 @@ var flash = require('express-flash');
 var path = require('path');
 var cors = require('cors');
 var expressValidator = require('express-validator');
-var issueParser = require('./server/issueparser.js');
-var processHook = issueParser.processHook;
+// var issueParser = require('./server/issueparser.js');
+// var processHook = issueParser.processHook;
 
 /**
  * Import API keys from environment
@@ -137,7 +137,8 @@ function processCallback(req, res, path) {
           //     "github=j%3A%7B%22body%22%3A%7B%22login... ....qTKzGvAWm5ElZZ9PwUtZs4FAyDkOPtno9480FIX1P0A; path=/; expires=Mon, 02 Feb 2015 19:32:02 GMT; httponly"
           res.cookie('github', body, { maxAge: 900000 });
 
-          res.redirect("/#/"+path); // Remove this when we move away from # URLs
+          // res.redirect("/#/"+path); // Remove this when we move away from # URLs
+          res.redirect("/"+path); // Remove this when we move away from # URLs
         }
       });
     }
@@ -156,12 +157,31 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+app.use('/', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.use('/add', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.use('/next', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.use('/now', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.use('/upcoming', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.use('/design', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+
 
 /**
  * Webhook handler (from github)
  */
 
- app.post('/postreceive', processHook);
+ // app.post('/postreceive', processHook);
 
 /**
  * 500 Error Handler.
