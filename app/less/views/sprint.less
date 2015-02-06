@@ -20,7 +20,7 @@
         }
 
         h3 {
-            margin: 10px 0 8px 100px;
+            margin: 0 0 8px 100px;
 
             font-weight: 400;
             font-size: 1.1em;
@@ -30,23 +30,38 @@
         p {
             font-size: 0.8em;
             margin: 0 0 8px 100px;
-            max-height: 3em;
+            max-height: 4em;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        li {
-            height: 120px;
-            padding: 12px;
+        li.issue {
+            padding: 12px 0 12px 12px;
             margin: 5px;
             border: 1px solid transparent;
             border-radius: 3px;
         }
 
-        li:hover {
+        li.issue:hover {
             cursor: pointer;
             border: 1px solid rgba(1, 1, 1, 0.2);
             background: rgba(1, 1, 1, 0.08);
+        }
+        li.role {
+            list-style: none;
+        }
+        .right {
+            font-size: smaller;
+            font-weight: normal;
+            float:right;
+            width: 250px;
+            .role {
+                padding-right: .5em;
+            }
+        }
+        .left {
+            float: left;
+            width: 370px;
         }
     }
 

@@ -4,11 +4,60 @@ var Labels = require("./labels.jsx");
 var APIServer = "/api";
 var Filter = require("./filter.jsx");
 
+var Roles = React.createClass({
+  getInitialState: function() {
+    return {
+      _roles: {
+        "Driver":"",
+        "Lead Dev":"",
+        "Lead Design":"",
+        "Quality":""
+      }
+    }
+  },
+  componentDidMount: function() {
+    var comp = this;
+    var id = this.props.issueId;
+    console.log("id", id);
+    var issuesRef = new Firebase("https://webmakerbuild.firebaseio.com/issues").
+          child(id).
+          child("_roles").
+          on('value',
+      function(snapshot) {
+        var roles = snapshot.val();
+        console.log("got roles", roles);
+        if (roles) {
+          comp.setState({"_roles": roles})
+        }
+      })
+  },
+  render: function() {
+    var rolelist = [];
+    var index = 0;
+    for (var role in this.state._roles) {
+      var assignee = decodeURIComponent(this.state._roles[role]);
+      var role = decodeURIComponent(role);
+      index++;
+
+      rolelist.push(<li key={index} className="role">
+                      <span className="role">{role}:</span>
+                      <span className="who">{assignee}</span>
+                    </li>);
+    }
+    return (
+      <ul className="roles">
+        {rolelist}
+      </ul>
+    );
+  }
+})
+
 var Issue = React.createClass({
   getInitialState: function() {
     return {};
   },
   render: function() {
+
     var data = this.props.data;
     if (!data) {
       return <div/>;
@@ -23,13 +72,19 @@ var Issue = React.createClass({
            title="Created by"
            alt={data.user.login}/>;
     return (
-      <li className="clearfix">
+      <li className="issue clearfix">
+      <div className="left">
           <a href={data.html_url} target="_blank">
             {Img}
             <h3>{data.title}</h3>
             <p>{trimmedBody}</p>
           </a>
           <Labels labels={data.labels}/>
+      </div>
+      <div className="right">
+        <Roles issueId={this.props.data.id}/>
+      </div>
+      <div className="clearfix"/>
       </li>
     );
   }

@@ -18,8 +18,8 @@ var flash = require('express-flash');
 var path = require('path');
 var cors = require('cors');
 var expressValidator = require('express-validator');
-// var issueParser = require('./server/issueparser.js');
-// var processHook = issueParser.processHook;
+var issueParser = require('./server/issueparser.js');
+var processHook = issueParser.processHook;
 
 /**
  * Import API keys from environment
@@ -152,27 +152,30 @@ app.get('/auth/callback', function (req, res) {
 });
 
 
+app.post('/postreceive', processHook);
+
+
 app.get('/logout', function (req, res) {
   req.session.token = null;
   res.redirect('/');
 });
 
-app.use('/', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
-app.use('/add', function(req, res) {
+app.get('/add', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
-app.use('/next', function(req, res) {
+app.get('/next', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
-app.use('/now', function(req, res) {
+app.get('/now', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
-app.use('/upcoming', function(req, res) {
+app.get('/upcoming', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
-app.use('/design', function(req, res) {
+app.get('/design', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
 
@@ -180,8 +183,6 @@ app.use('/design', function(req, res) {
 /**
  * Webhook handler (from github)
  */
-
-// app.post('/postreceive', processHook);
 
 /**
  * 500 Error Handler.
