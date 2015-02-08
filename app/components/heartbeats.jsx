@@ -194,7 +194,9 @@ var Heartbeat = React.createClass({
         <div className="header">
           <h2>{this.props.title}</h2>
         </div>
-        <Filter class="filter" fullset={this.state.query} doFilter={this.doFilter}/>
+        <div className="filterdiv">
+          <Filter className="filter" fullset={this.state.query} doFilter={this.doFilter}/>
+        </div>
         <div className="main">
           <div id="sprint">
             {p1s}
