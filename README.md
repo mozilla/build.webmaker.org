@@ -25,7 +25,7 @@ npm install
 In development mode, do:
 
 ```bash
-gulp liveserver
+gulp liveserve
 ```
 This will do a full lint and full minification of the server on initial startup, but a lighter weight
 (and much faster) reprocessing on changes it detects while the server is running.  Code changes
