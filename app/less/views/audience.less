@@ -1,0 +1,193 @@
+@import "../colors";
+
+#audience {
+
+  @padding: 16px;
+  @motivatorImageSize: 80px;
+  @personaWidth: 150px;
+
+  section {
+    margin: 1em 0 2em 0;
+
+    .subsection {
+      background-color: @white;
+      padding: @padding;
+      margin: 1em 0;
+      font-weight: 200;
+
+      &.bare {
+        padding: 0;
+        background-color: transparent;
+      }
+
+      &.grid {
+        [class*='row-'] {
+          padding-bottom: @padding;
+          display: table;
+          width: 100%;
+
+          &:last-child {
+            padding-bottom: 0;
+          }
+
+          .col {
+            display: table-cell;
+            box-sizing: border-box;
+          }
+        }
+
+        .row-2 {
+          .col {
+            width: 50%;
+          }
+        }
+
+        .row-3 {
+          .col {
+            width: 33.33%;
+          }
+        }
+      }
+    }
+
+    &.motivators {
+      .subsection {
+        p {
+          font-size: .8rem;
+          font-style: italic;
+        }
+
+        &.grid [class*='row-'] .col {
+          min-height: @motivatorImageSize;
+          background-size: @motivatorImageSize;
+          background-repeat: no-repeat;
+
+          &:first-child {
+            border-right: @padding solid transparent;
+            padding-right: @motivatorImageSize + @padding;
+            background-position: 100% 0%;
+          }
+
+          &:last-child {
+            border-left: @padding solid transparent;
+            padding-left: @motivatorImageSize + @padding;
+            background-position: 0% 0%;
+          }
+
+          &.attention {
+            background-image: url('/svg/motivator-attention.svg');
+          }
+          &.aspiration {
+            background-image: url('/svg/motivator-aspiration.svg');
+          }
+          &.self-expression {
+            background-image: url('/svg/motivator-self-expression.svg');
+          }
+          &.community {
+            background-image: url('/svg/motivator-community.svg');
+          }
+        }
+      }
+    }
+
+    &.personas {
+      .subsection {
+
+        &.grid {
+          [class*='row-'] {
+            .col {
+              background: @white;
+              background-repeat: no-repeat;
+              background-size: @personaWidth;
+              background-position: @padding @padding;
+              padding: @padding;
+
+              &:nth-child(1) {
+                border-right: @padding/1.5 solid @background;
+              }
+              &:nth-child(2) {
+                border-left: @padding/3 solid @background;
+                border-right: @padding/3 solid @background;
+              }
+              &:nth-child(3) {
+                border-left: @padding/1.5 solid @background;
+              }
+
+
+              .info-box {
+                width: 100%;
+                margin-left: @personaWidth + @padding;
+                min-height: @personaWidth + @padding;
+
+                ul.traits {
+                  list-style: none;
+                  padding: 0;
+                  font-size: .8rem;
+                  font-style: italic;
+                }
+
+                ul.motivators {
+                  list-style: none;
+                  padding: 0;
+                  font-size: .6rem;
+
+                  li.on {
+                    font-weight: bold;
+                  }
+                }
+              }
+
+              &.jane {
+                background-image: url('/img/personas/jane.png');
+              }
+              &.lewis {
+                background-image: url('/img/personas/lewis.png');
+              }
+              &.sadia {
+                background-image: url('/img/personas/sadia.png');
+              }
+
+              &.kevin {
+                background-image: url('/img/personas/kevin.png');
+              }
+              &.lajune {
+                background-image: url('/img/personas/lajune.png');
+              }
+              &.kathryn {
+                background-image: url('/img/personas/kathryn.png');
+              }
+
+              /* ᕕ( ᐛ)ᕗ */
+              p {
+                font-size: .85rem;
+
+                &.quote {
+                  font-size: .9rem;
+                  font-style: italic;
+                  font-weight: bold;
+
+                  &:before {
+                    content: '"';
+                  }
+
+                  &:after {
+                    content: '"';
+                  }
+                }
+              }
+
+            }
+          }
+        }
+      }
+    }
+
+    &.journey {
+      img {
+        width: 100%;
+        cursor: zoom-in;
+      }
+    }
+  }
+
+}
