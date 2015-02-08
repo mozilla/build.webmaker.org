@@ -17,7 +17,7 @@ npm install
 #### Edit .env
 * `PLAN_SESSION_SECRET` should be whatever you want it to be.
 * `PLAN_GITHUB_CLIENTID` and `PLAN_GITHUB_CLIENTSECRET` should be obtained by creating a new Developer Application in Github (https://github.com/settings/applications). For __Authorization callback URL__, make sure you use `/auth/github/callback` prefixed by the address of the host you use for the app.
-* `PLAN_GITHUB_TOKEN` is optional but will help avoid rate limiting, and is a Personal Access Token generated on the same page.
+* `PLAN_GITHUB_TOKEN` is optional but will help avoid rate limiting, and is a Personal Access Token generated on the same page.  It needs to have read:org permissions in order to do autocomplete based on teams in the /add field.
 * `PLAN_GITHUB_HOST` is the url at which the server is running (for github oauth)
 
 #### Run
