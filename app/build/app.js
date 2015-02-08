@@ -829,6 +829,7 @@ var getJSON = require("./getJSON.jsx");
 var Labels = require("./labels.jsx");
 var APIServer = "/api";
 var Filter = require("./filter.jsx");
+var converter = new Showdown.converter();
 
 var Roles = React.createClass({
   displayName: "Roles",
@@ -897,7 +898,10 @@ var Issue = React.createClass({
       return React.createElement("div", null);
     }
     var lines = data.body.split("\n");
-    var trimmedBody = lines[0];
+    var trimmedBody = converter.makeHtml(lines[0]);
+    var doClick = function () {
+      location.href = data.html_url;
+    };
     var Img = data.assignee ? React.createElement("img", { src: data.assignee.avatar_url,
       title: "Assigned to",
       alt: data.assignee.login }) : React.createElement("img", { src: data.user.avatar_url,
@@ -905,24 +909,20 @@ var Issue = React.createClass({
       alt: data.user.login });
     return React.createElement(
       "li",
-      { className: "issue clearfix" },
+      { className: "issue clearfix", onClick: doClick },
       React.createElement(
         "div",
         { className: "left" },
+        Img,
         React.createElement(
-          "a",
-          { href: data.html_url, target: "_blank" },
-          Img,
-          React.createElement(
-            "h3",
-            null,
-            data.title
-          ),
-          React.createElement(
-            "p",
-            null,
-            trimmedBody
-          )
+          "h3",
+          null,
+          data.title
+        ),
+        React.createElement(
+          "p",
+          null,
+          React.createElement("span", { dangerouslySetInnerHTML: { __html: trimmedBody } })
         ),
         React.createElement(Labels, { labels: data.labels })
       ),

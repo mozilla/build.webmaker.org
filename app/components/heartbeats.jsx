@@ -3,6 +3,7 @@ var getJSON = require("./getJSON.jsx");
 var Labels = require("./labels.jsx");
 var APIServer = "/api";
 var Filter = require("./filter.jsx");
+var converter = new Showdown.converter();
 
 var Roles = React.createClass({
   getInitialState: function() {
@@ -63,7 +64,10 @@ var Issue = React.createClass({
       return <div/>;
     }
     var lines = data.body.split("\n");
-    var trimmedBody = lines[0];
+    var trimmedBody = converter.makeHtml(lines[0]);
+    var doClick = function() {
+      location.href = data.html_url;
+    }
     var Img = data.assignee ?
       <img src={data.assignee.avatar_url}
            title="Assigned to"
@@ -72,19 +76,17 @@ var Issue = React.createClass({
            title="Created by"
            alt={data.user.login}/>;
     return (
-      <li className="issue clearfix">
-      <div className="left">
-          <a href={data.html_url} target="_blank">
-            {Img}
-            <h3>{data.title}</h3>
-            <p>{trimmedBody}</p>
-          </a>
+      <li className="issue clearfix" onClick={doClick}>
+        <div className="left">
+          {Img}
+          <h3>{data.title}</h3>
+          <p><span dangerouslySetInnerHTML={{__html: trimmedBody}} /></p>
           <Labels labels={data.labels}/>
-      </div>
-      <div className="right">
-        <Roles issueId={this.props.data.id}/>
-      </div>
-      <div className="clearfix"/>
+        </div>
+        <div className="right">
+          <Roles issueId={this.props.data.id}/>
+        </div>
+        <div className="clearfix"/>
       </li>
     );
   }
