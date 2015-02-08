@@ -142,7 +142,6 @@ function processCallback(req, res, path) {
           // For some reason, this results in a cookie w/ "j$3A" at the front, which confuses me:
           //     "github=j%3A%7B%22body%22%3A%7B%22login... ....qTKzGvAWm5ElZZ9PwUtZs4FAyDkOPtno9480FIX1P0A; path=/; expires=Mon, 02 Feb 2015 19:32:02 GMT; httponly"
           res.cookie('github', body, { maxAge: 900000 });
-          console.log("REDIRECTING AFTER AUTH TO", path)
 
           // res.redirect("/#/"+path); // Remove this when we move away from # URLs
           res.redirect("/"+path); // Remove this when we move away from # URLs

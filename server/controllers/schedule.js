@@ -47,8 +47,11 @@ exports.createPost = function(req, res) {
  */
 exports.now = function(req, res) {
   github.thisMilestone(function(err, body) {
-    if (err) res.redirect('/500');
-    res.json({issues: body})
+    if (err) {
+      res.redirect('/500');
+    } else {
+      res.json({issues: body})
+    }
   });
 };
 

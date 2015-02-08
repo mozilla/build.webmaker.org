@@ -19,14 +19,12 @@ var Roles = React.createClass({
   componentDidMount: function() {
     var comp = this;
     var id = this.props.issueId;
-    console.log("id", id);
     var issuesRef = new Firebase("https://webmakerbuild.firebaseio.com/issues").
           child(id).
           child("_roles").
           on('value',
       function(snapshot) {
         var roles = snapshot.val();
-        console.log("got roles", roles);
         if (roles) {
           comp.setState({"_roles": roles})
         }
@@ -147,7 +145,6 @@ var Heartbeat = React.createClass({
       });
     }
     this.state.full.p1.forEach(function(issue){
-      console.log("ISSUE", issue);
       // Filtering on title, labels, and body
       var labels = issue.labels.map(function(label) { return label.name}).join(",");
       if ((issue.title.toLowerCase().indexOf(filterText)!=-1) ||

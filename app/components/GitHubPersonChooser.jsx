@@ -15,7 +15,6 @@ var GitHubPerson = React.createClass({
     var that = this;
     // XXX Ensure this is cached
     getJSON("/api/team/"+team, function(members) {
-      console.log(members);
       if (that.isMounted()) {
         var data = members.map(function(member) {
           var name = member.name;

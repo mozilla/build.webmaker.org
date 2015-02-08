@@ -83,7 +83,6 @@ function Github(client, secret) {
       var target = (isPriority) ? result.p1 : result.p2;
       target.push(issue);
     }
-
     return result;
   }
 }
@@ -92,7 +91,7 @@ function Github(client, secret) {
 
 Github.prototype.githubJSON = function(fragment, callback) {
   var _this = this;
-  var url = "https://api.github.com/" + fragment;
+  var url = "https://api.github.com" + fragment;
   var copy = _this.cache.get(url);
   if (typeof copy !== 'undefined') {
     return callback(null, copy);
@@ -170,64 +169,11 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
  * @param  {Function} callback
  */
 Github.prototype.getMilestones = function(callback) {
-  var _this = this;
-
-  // Cache target
-  var url = _this.host + _this.repo + '/milestones';
-  var copy = _this.cache.get(url);
-  if (typeof copy !== 'undefined') {
-    return callback(null, copy);
-  }
-
-  // Request from API
-  request({
-    method: 'GET',
-    uri: url,
-    headers: {
-      'User-Agent': 'build.webmaker.org',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: 'token ' + _this.token
-    },
-    json: {}
-  }, function(err, res, body) {
-    if (err) {
-      console.log("ERROR", err, body);
-    }
-    if (err) return callback(err);
-
-    // Set cache & return
-    _this.cache.set(url, body);
-    callback(err, body);
-  });
+  this.githubJSON(this.repo + '/milestones', callback);
 };
 
 Github.prototype.getIssuesForMilestone = function(id, callback) {
-  var _this = this;
-
-  // Cache target
-  var url = _this.host + _this.repo + '/issues?milestone=' + id;
-  var copy = _this.cache.get(url);
-  if (typeof copy !== 'undefined') {
-    return callback(null, copy);
-  }
-
-  // Request from API
-  request({
-    method: 'GET',
-    uri: url,
-    headers: {
-      'User-Agent': 'build.webmaker.org',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: 'token ' + _this.token
-    },
-    json: {}
-  }, function(err, res, body) {
-    if (err) return callback(err);
-
-    // Set cache & return
-    _this.cache.set(url, body);
-    callback(err, body);
-  });
+  this.githubJSON(this.repo + '/issues?milestone=' + id, callback);
 };
 
 Github.prototype.thisMilestone = function(callback) {
@@ -240,12 +186,10 @@ Github.prototype.thisMilestone = function(callback) {
     // Look for the first milestone that is in the future
     for (var i = 0; i < milestones.length; i++) {
       milestone = milestones[i];
-      console.log(milestone.due_on, new Date(), new Date(milestone.due_on) > new Date())
       if (new Date(milestone.due_on) > new Date()) {
         break;
       }
     }
-
     if (typeof milestone === 'undefined') return callback('404');
     _this.getIssuesForMilestone(milestone.number, function(err, result) {
       if (err) return callback(err);
@@ -337,18 +281,18 @@ Github.prototype.teamMembers = function(team, callback) {
   // get the members of the team
   // GET /teams/:id/members
   // For each member, get the user data (for names)
-  // XXX this will break if we have > 100 people in a team. 
-  this.githubJSON("orgs/MozillaFoundation/teams", function(err, teamsblob) {
+  this.githubJSON("/orgs/MozillaFoundation/teams", function(err, teamsblob) {
     // console.log(teamsblob);
     if (teamsblob) {
       teamsblob.forEach(function(teamblob) {
         console.log(teamblob.name.toLowerCase(), team.toLowerCase())
         if (teamblob.name.toLowerCase() == team.toLowerCase()) {
           var memberData = []
-          _this.githubJSON("teams/"+teamblob.id+"/members?per_page=100", function(err, membersblob) {
+          // XXX this will break if we have > 100 people in a team.
+          _this.githubJSON("/teams/"+teamblob.id+"/members?per_page=100", function(err, membersblob) {
             console.log("Got ", membersblob.length, "members" );
             async.map(membersblob, function(member, callback) {
-              _this.githubJSON("users/"+member.login, function(err, memberblob) {
+              _this.githubJSON("/users/"+member.login, function(err, memberblob) {
                 if (err) return callback(err);
                 callback(null, memberblob);
               });
@@ -364,35 +308,11 @@ Github.prototype.teamMembers = function(team, callback) {
 // XXX REFACTOR THIS CACHING/TOKEN/JSON BUSINESS using githubJSON above
 
 Github.prototype.search = function(q, sort, order, callback) {
-  var _this = this;
-
   // Cache target
   var path = "?q="+encodeURIComponent(q) +
       "&sort="+encodeURIComponent(sort) +
       "&order="+encodeURIComponent(order);
-  var url = "https://api.github.com/search/issues" + path;
-  var copy = _this.cache.get(url);
-  if (typeof copy !== 'undefined') {
-    return callback(null, copy);
-  }
-
-  // Request from API
-  request({
-    method: 'GET',
-    uri: url,
-    headers: {
-      'User-Agent': 'build.webmaker.org',
-      Accept: 'application/vnd.github.v3+json',
-      Authorization: 'token ' + _this.token
-    },
-    json: {}
-  }, function(err, res, body) {
-    if (err) return callback(err);
-
-    // Set cache & return
-    _this.cache.set(url, body);
-    callback(err, body);
-  });
+  this.githubJSON("/search/issues/"+path, callback)
 };
 /**
  * Export

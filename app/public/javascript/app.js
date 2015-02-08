@@ -74,7 +74,6 @@ var GitHubPerson = React.createClass({
     var that = this;
     // XXX Ensure this is cached
     getJSON("/api/team/" + team, function (members) {
-      console.log(members);
       if (that.isMounted()) {
         var data = members.map(function (member) {
           var name = member.name;
@@ -846,10 +845,8 @@ var Roles = React.createClass({
   componentDidMount: function () {
     var comp = this;
     var id = this.props.issueId;
-    console.log("id", id);
     var issuesRef = new Firebase("https://webmakerbuild.firebaseio.com/issues").child(id).child("_roles").on("value", function (snapshot) {
       var roles = snapshot.val();
-      console.log("got roles", roles);
       if (roles) {
         comp.setState({ _roles: roles });
       }
@@ -989,7 +986,6 @@ var Heartbeat = React.createClass({
       });
     }
     this.state.full.p1.forEach(function (issue) {
-      console.log("ISSUE", issue);
       // Filtering on title, labels, and body
       var labels = issue.labels.map(function (label) {
         return label.name;
