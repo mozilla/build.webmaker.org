@@ -88,6 +88,34 @@ function Github(client, secret) {
   }
 }
 
+
+
+Github.prototype.githubJSON = function(fragment, callback) {
+  var _this = this;
+  var url = "https://api.github.com/" + fragment;
+  var copy = _this.cache.get(url);
+  if (typeof copy !== 'undefined') {
+    return callback(null, copy);
+  }
+
+  // Request from API
+  request({
+    method: 'GET',
+    uri: url,
+    headers: {
+      'User-Agent': 'build.webmaker.org',
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: 'token ' + _this.token
+    },
+    json: {}
+  }, function(err, res, body) {
+    if (err) return callback(err);
+    // Set cache & return
+    _this.cache.set(url, body);
+    callback(err, body);
+  });
+}
+
 /**
  * Returns a user object from the Github API based on the provided auth token.
  *
@@ -301,6 +329,39 @@ Github.prototype.getUserInfo = function(username, callback) {
   });
 };
 
+Github.prototype.teamMembers = function(team, callback) {
+  _this = this;
+  // Find the teams in the org
+  // GET /orgs/:org/teams
+  // find the id for team name "team"
+  // get the members of the team
+  // GET /teams/:id/members
+  // For each member, get the user data (for names)
+  // XXX this will break if we have > 100 people in a team. 
+  this.githubJSON("orgs/MozillaFoundation/teams", function(err, teamsblob) {
+    // console.log(teamsblob);
+    if (teamsblob) {
+      teamsblob.forEach(function(teamblob) {
+        console.log(teamblob.name.toLowerCase(), team.toLowerCase())
+        if (teamblob.name.toLowerCase() == team.toLowerCase()) {
+          var memberData = []
+          _this.githubJSON("teams/"+teamblob.id+"/members?per_page=100", function(err, membersblob) {
+            console.log("Got ", membersblob.length, "members" );
+            async.map(membersblob, function(member, callback) {
+              _this.githubJSON("users/"+member.login, function(err, memberblob) {
+                if (err) return callback(err);
+                callback(null, memberblob);
+              });
+            }, callback);
+          });
+        }
+      })
+    }
+    //callback('failure'); XXX
+  });
+};
+
+// XXX REFACTOR THIS CACHING/TOKEN/JSON BUSINESS using githubJSON above
 
 Github.prototype.search = function(q, sort, order, callback) {
   var _this = this;
@@ -310,7 +371,6 @@ Github.prototype.search = function(q, sort, order, callback) {
       "&sort="+encodeURIComponent(sort) +
       "&order="+encodeURIComponent(order);
   var url = "https://api.github.com/search/issues" + path;
-  console.log("calling url", url);
   var copy = _this.cache.get(url);
   if (typeof copy !== 'undefined') {
     return callback(null, copy);

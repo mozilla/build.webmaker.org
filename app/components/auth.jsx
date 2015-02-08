@@ -95,7 +95,7 @@ var auth = {
     return "";
   },
   login: function() {
-    if (location.hostname === "localhostX") { /* make debugging easier */
+    if (location.hostname === "localhost") { /* make debugging easier */
       localStorage.github = JSON.stringify({
         name: "pretend davidascher",
         handle: "davidascher"
@@ -103,7 +103,7 @@ var auth = {
       docCookies.setItem("github", "j="+localStorage.github);
       location.reload();
     } else {
-      var newURL = "/auth/github/" + document.location.hash.slice(2);
+      var newURL = "/auth/github" + document.location.pathname;
       window.location = newURL;
     }
   },

@@ -22,7 +22,7 @@ var github = new Github(
  * @return {void}
  */
 exports.createPost = function(req, res) {
-  console.log("token", req.session.token);
+  console.log(req.body);
   form(req, res, function(errors, body) {
     if (errors) {
       req.flash('errors', errors);

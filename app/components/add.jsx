@@ -1,5 +1,6 @@
 var React = require("react");
 var { AuthMixin } = require("./auth.jsx");
+var GitHubPersonChooser = require("./GitHubPersonChooser.jsx");
 
 var Add = React.createClass({
   mixins: [AuthMixin],
@@ -49,6 +50,16 @@ var Add = React.createClass({
               <h2>How will you measure success?</h2>
               <p>Describe the data you will use. Is there existing tracking in place? Do you need to setup new reports or dashboards?</p>
               <textarea name="measurement" rows="8"></textarea>
+            </div>
+            <div className="question">
+              <h2>Decision Maker</h2>
+              <p>Who is the single person who can be relied upon to make the decisions that will come up during this initiative?</p>
+              <GitHubPersonChooser name="decision" team="MoFos"/>
+            </div>
+            <div className="question">
+              <h2>Driver (optional)</h2>
+              <p>If known, who is the single person who will drive this initiative for the heartbeat?</p>
+              <GitHubPersonChooser name="driver" team="trained drivers"/>
             </div>
             <button className="button" type="submit">Submit Project</button>
           </form>

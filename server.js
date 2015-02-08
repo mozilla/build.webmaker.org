@@ -81,14 +81,20 @@ app.post('/api/add', routes.schedule.createPost);
 app.get('/api/now', routes.schedule.now);
 app.get('/api/next', routes.schedule.next);
 app.get('/api/upcoming', routes.schedule.upcoming);
+app.get('/api/team/:team', function(req, res) {
+  github.teamMembers(req.params.team, function(err, body) {
+    if (err) res.redirect('/500');
+    res.type('application/json; charset=utf-8').send(body);
+  });
+});
 app.get('/api/github/search/issues', function(req, res) {
   var sort = req.query.sort || "updated";
   var order = req.query.order || "asc";
   github.search(req.query.q, sort, order, function(err, body) {
-  if (err) res.redirect('/500');
-  res.type('application/json; charset=utf-8').send(body);
-  // res.type('application/json').send(body);
-});
+    if (err) res.redirect('/500');
+    res.type('application/json; charset=utf-8').send(body);
+    // res.type('application/json').send(body);
+  });
 });
 app.get('/api/user/:username', function(req, res) {
   github.getUserInfo(req.params.username, function(err, body) {
@@ -136,6 +142,7 @@ function processCallback(req, res, path) {
           // For some reason, this results in a cookie w/ "j$3A" at the front, which confuses me:
           //     "github=j%3A%7B%22body%22%3A%7B%22login... ....qTKzGvAWm5ElZZ9PwUtZs4FAyDkOPtno9480FIX1P0A; path=/; expires=Mon, 02 Feb 2015 19:32:02 GMT; httponly"
           res.cookie('github', body, { maxAge: 900000 });
+          console.log("REDIRECTING AFTER AUTH TO", path)
 
           // res.redirect("/#/"+path); // Remove this when we move away from # URLs
           res.redirect("/"+path); // Remove this when we move away from # URLs

@@ -3,11 +3,12 @@ var Firebase = require('firebase');
 var ref = new Firebase('https://webmakerbuild.firebaseIO.com/');
 var firebase_secret = secrets.firebaseSecret;
 var request = require('request');
+var extractRoles = require("./extractRoles.js");
 
 githubToken = secrets.github.token;
 
 
-console.log("FIREBASE SECRET", firebase_secret);
+// console.log("FIREBASE SECRET", firebase_secret);
 ref.authWithCustomToken(firebase_secret, function(error, authData) {
   if (error) {
     console.log("Login Failed!", error);
@@ -187,6 +188,57 @@ var parseComment = function(repository, issue, comment, patchComment) {
   }
 }
 
+function parsePageOfIssues(pageNo, pageSize, req, repoName, ret) {
+  var repository = ret.body;
+  url = repository.url + '/issues';
+  url += "?page="+pageNo+"&per_page="+pageSize+"&access_token="+encodeURIComponent(token);
+  var options = {
+    url: url,
+    json: true,
+    headers: {
+        'User-Agent': 'NodeJS HTTP Client'
+    }
+  };
+  request.get(options, function(err, ret) {
+    if (err) {
+      console.log("got error fetching issues", err);
+    } else {
+      // we have the issues
+      for (var i=0; i<ret.body.length; i++) {
+        var issue = ret.body[i];
+        issues.child(issue.id).set(issue);
+        parseIssueBody(repository, issue, issue.body, false);
+        // then get the commentsf
+        url = issue.url + "/comments?access_token="+encodeURIComponent(token);
+        var options = {
+          url: url,
+          json: true,
+          headers: {
+              'User-Agent': 'NodeJS HTTP Client'
+          }
+        };
+        function getComments(issue) {
+          request.get(options, function(err, ret) {
+            if (err) {
+              console.log("Got error getting comments", err);
+            } else {
+              for (var i=0; i<ret.body.length; i++) {
+                var comment = ret.body[i];
+                if (issue.url != comment.issue_url) {
+                  console.log("WTF", "ISSUE", issue, "\n\n\nCOMMENT", comment);
+                  process.exit(0);
+                }
+                parseComment(repository, issue, comment, false);
+              }
+            }
+          });
+        }
+        getComments(issue);
+      }
+    }
+  });
+}
+
 function parseRepo(req, repoName) {
   token = githubToken;
   // first get repo info
@@ -204,141 +256,79 @@ function parseRepo(req, repoName) {
     }
   };
   request.get(options, function(err, ret) {
-    // now, get the issues
-    // console.log("got", ret.body);
-    var repository = ret.body;
-    url = repository.url + '/issues';
-    url += "?access_token="+encodeURIComponent(token);
-    var options = {
-      url: url,
-      json: true,
-      headers: {
-          'User-Agent': 'NodeJS HTTP Client'
-      }
-    };
-    request.get(options, function(err, ret) {
-      if (err) {
-        console.log("got error fetching issues", err);
-      } else {
-        // we have the issues
-        for (var i=0; i<ret.body.length; i++) {
-          var issue = ret.body[i];
-          issues.child(issue.id).set(issue);
-          parseCommentZero(repository, issue, issue, false);
-          // then get the comments
-          url = issue.url + "/comments?access_token="+encodeURIComponent(token);
-          var options = {
-            url: url,
-            json: true,
-            headers: {
-                'User-Agent': 'NodeJS HTTP Client'
-            }
-          };
-          function getComments(issue) {
-            request.get(options, function(err, ret) {
-              if (err) {
-                console.log("Got error getting comments", err);
-              } else {
-                for (var i=0; i<ret.body.length; i++) {
-                  var comment = ret.body[i];
-                  if (issue.url != comment.issue_url) {
-                    console.log("WTF", "ISSUE", issue, "\n\n\nCOMMENT", comment);
-                    process.exit(0);
-                  }
-                  parseComment(repository, issue, comment, false);
-                }
-              }
-            });
-          }
-          getComments(issue);
-        }
-      }
-    });
+    var issueCount = Number(ret.body.open_issues_count);
+    var pageSize = 100;
+    var numPages = Math.ceil(issueCount / pageSize);
+    for (var pageNo = 1; pageNo <= numPages; pageNo++) {
+      parsePageOfIssues(pageNo, pageSize, req, repoName, ret)
+
+    }
   });
 }
 
-function parseCommentZero(repo, issue, comment, annotate) {
-  console.log("COMMENT ZERO PROCESSING OF", comment.html_url);
-  console.log("ID", issue.id);
-  var lines = comment.body.split('\n');
-  lines.forEach(function(line) {
-    if (line) {
-      console.log(line);
-      var parts = line.split(": @", 2);
-      console.log(parts);
-      if (parts.length == 2) {
-        var role, assignee;
-        role = parts[0].trim();
-        if (role.indexOf("* ") == 0) {
-          role = role.slice(2);
+
+function parseIssueBody(repo, issue, body, annotate) {
+  var roles = extractRoles(body);
+  console.log("ROLES", roles);
+
+  roles.forEach(function (pair) {
+    var role = pair[0];
+    newAssignee = pair[1];
+    var assignments = ref.child('assignments');
+    var issueRef = ref.child("issues").child(issue.id);
+    // check under /id/role for old assignee
+    // if old assignee is not this assignee, remove from old_assignee/id/role
+    // add to new_assignee/id/role
+    issueRef.child("roles").child(role).once("value",
+      function(snapshot) {
+        var oldAssignee = snapshot.val();
+        if (oldAssignee !== null) {
+          // there was someone in this role before
+          assignments.child(oldAssignee).child(issue.id).remove();
         }
-        // TODO: XXX Also look for things like:
-        // * role: name
-        // and:
-        // * role: <nothing>
-        newAssignee = "@"+(parts[1].trim()); // Not all roles will be handles in reality
-        role = encodeURIComponent(role);
-        newAssignee = encodeURIComponent(newAssignee);
-        console.log(role, role.length, newAssignee, newAssignee.length);
-        var assignments = ref.child('assignments');
-        if ((role.length < 30) && (newAssignee.length < 30)) {
-         console.log('------------',role,"-->", newAssignee);
-         // console.log(issue.id, role, assignee);
-         var issueRef = ref.child("issues").child(issue.id);
-         // check under /id/role for old assignee
-         // if old assignee is not this assignee, remove from old_assignee/id/role
-         // add to new_assignee/id/role
-         var roles = issueRef.child("roles").child(role).once("value",
-          function(snapshot) {
-            var oldAssignee = snapshot.val();
-            console.log("oldAssignee", oldAssignee);
-            if (oldAssignee !== null) {
-              // there was someone in this role before
-              assignments.child(oldAssignee).child(issue.id).remove();
-            }
-            // console.log("XXX", newAssignee, issue.id, role);
-            assignments.child(newAssignee).child(issue.id).set(role);
-            issueRef.child("_roles").child(role).set(newAssignee);
-          })
-        }
+        assignments.child(newAssignee).child(issue.id).set(role);
+        issueRef.child("_roles").child(role).set(newAssignee);
       }
-    }
-  })
-  var body = comment.body;
+    );
+  });
 }
 
 var processHook = function(req, res) {
   var eventType = req.headers['x-github-event'];
   var encodedRepoName = encodeURIComponent(req.body.repository.full_name);
+  console.log("GOT HOOK, encodedRepoName", encodedRepoName);
   ref.child('repos-hooked').child(encodedRepoName)
    .set({'date': String(new Date()),
          'url': req.body.repository.html_url});
-  // If repo not in repos-scanned then scan it from here.
-  ref.child(encodedRepoName).once("value", function(snapshot) {
+
+  // If repo not in repos-added then scan it from here.
+  ref.child('repos-added').child(encodedRepoName).once("value", function(snapshot) {
     var exists = (snapshot.val() !== null);
     if (! exists) {
       console.log("Parsing the repo from scratch", req.body.repository.full_name);
       parseRepo(req, req.body.repository.full_name);
     }
   });
-  // parseRepo(req, req.body.repository.full_name);
 
-  // if (eventType == 'issues') {
-  //   var issue = issues.child(req.body.issue.id)
-  //   issue.set(req.body.issue);
-  //   parseCommentZero(req.body.repository, req.body.issue, req.body.comment, true);
-  //   // parseCommentZero(req.body.issue);
-  //   // console.log(req.body.issue.id, req.body.issue);
-  // } else if (eventType == 'issue_comment') {
-  //   var issue = issues.child(req.body.issue.id);
-  //   issue.transaction(function(currentIssue) {
-  //     if (currentIssue == null) {
-  //       issue.set(req.body.issue);
-  //     }
-  //     issue.child('comments').child(req.body.comment.id).set(req.body.comment);
-  //     parseComment(req.body.repository, req.body.issue, req.body.comment, true);
-  //     })
-  // }
+  if (eventType == 'issues') {
+    // This is a new issue
+    var issue = issues.child(req.body.issue.id)
+    issue.set(req.body.issue);
+    parseIssueBody(req.body.repository, req.body.issue, req.body.issue.body, false);
+  } else if (eventType == 'issue_comment') {
+    // a new comment
+    // refresh the issue body in case it's changed and wasn't noticed.
+    parseIssueBody(req.body.repository, req.body.issue, req.body.issue.body, false);
+
+    var issue = issues.child(req.body.issue.id);
+    issue.transaction(function(currentIssue) {
+      if (currentIssue == null) {
+        issue.set(req.body.issue);
+      }
+      issue.child('comments').child(req.body.comment.id).set(req.body.comment);
+      parseComment(req.body.repository, req.body.issue, req.body.comment, false);
+    })
+  }
   res.sendStatus(200);
 };
 

@@ -60,6 +60,7 @@
     "react": "^0.12.2",
     "react-onclickoutside": "^0.2.0",
     "react-router": "^0.11.6",
+    "react-select": "^0.3.2",
     "reactfire": "^0.4.0",
     "reactify": "^0.17.1",
     "request": "^2.52.0",
@@ -68,6 +69,7 @@
     "vinyl-transform": "^1.0.0"
   },
   "devDependencies": {
-    "gulp-express": "^0.1.7"
+    "gulp-express": "^0.1.7",
+    "react-select": "^0.3.2"
   }
 }

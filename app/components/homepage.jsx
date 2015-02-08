@@ -102,7 +102,7 @@ var GithubInitiativesSearch = React.createClass({
       var noun = pluralize("initiative", issues.length);
       return (
         <div id="openinitiatives">
-          <h2>{issues.length} open {nound} assigned</h2>
+          <h2>{issues.length} open {noun} assigned</h2>
           <ul>
             {issues}
           </ul>
