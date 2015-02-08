@@ -1446,7 +1446,11 @@ var Heartbeat = React.createClass({
           this.props.title
         )
       ),
-      React.createElement(Filter, { "class": "filter", fullset: this.state.query, doFilter: this.doFilter }),
+      React.createElement(
+        "div",
+        { className: "filterdiv" },
+        React.createElement(Filter, { className: "filter", fullset: this.state.query, doFilter: this.doFilter })
+      ),
       React.createElement(
         "div",
         { className: "main" },
