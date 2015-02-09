@@ -184,6 +184,12 @@ app.get('/upcoming', function(req, res) {
 app.get('/design', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'))
 });
+app.get('/audience', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
+app.get('/bugs', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'))
+});
 
 
 /**

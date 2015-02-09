@@ -7,6 +7,7 @@ var { Now, Next } = require("./heartbeats.jsx");
 var Upcoming = require("./upcoming.jsx");
 var Homepage = require("./homepage.jsx");
 var Design = require("./design.jsx");
+var Bugs = require("./bugs.jsx");
 var Audience = require("./audience.jsx");
 
 var App = React.createClass({
@@ -41,13 +42,16 @@ var App = React.createClass({
             Dashboard</a></li>
             <li>&nbsp;</li>
             <li className="icon-how">How We Work</li>
-            <ul>
+            <ul className="sublist">
               <li><a href="http://book.webmaker.org">Process</a></li>
               <li><Link to="design">Design</Link></li>
+              <li className="icon-involved">
+                <a href="https://webmaker.org/en-US/getinvolved">Get Involved</a>
+              </li>
+              <li className="file-a-bug icon-github">
+                <Link to="bugs">File a bug</Link>
+              </li>
             </ul>
-
-            <li className="icon-involved">
-            <a href="https://webmaker.org/en-US/getinvolved">Get Involved</a></li>
           </ul>
           <input type="checkbox" id="nav-trigger" className="nav-trigger" />
           <label htmlFor="nav-trigger"></label>
@@ -80,6 +84,7 @@ var routes = (
     <Route name="next" handler={Next} path="next" title="Next Heartbeat"/>
     <Route name="upcoming" handler={Upcoming}/>
     <Route name="design" handler={Design}/>
+    <Route name="bugs" handler={Bugs}/>
     <Route name="audience" handler={Audience}/>
     <DefaultRoute handler={Homepage}/>
   </Route>
