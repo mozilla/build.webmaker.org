@@ -81,7 +81,7 @@ var Audience = React.createClass({
                             </Persona>
                           </div>
                           <div className="col lewis">
-                            <Persona name="Sadia" location="Kenya" occupation="Teacher, Artist" motivators="Community,Ambition,Attention,Self Expression">
+                            <Persona name="Lewis" location="Kenya" occupation="Teacher, Artist" motivators="Community,Ambition,Attention,Self Expression">
                               <p>Lewis is an artist living on the outskirts of Kisumu, Kenya. He studies health and community at the university nearby, and works as a spoken word artist by speaking at weddings and funerals. Currently, he is authoring his first book, but regularly practices his writing by posting quotes on his popular Facebook account.</p>
                               <p className="quote">Every morning, I wake up wondering what I can change.</p>
                               <p>With the feature phone he calls his “Walkie Talkie”, Lewis reaches people through his Facebook page, which is also his promotion platform and a method for finding work.</p>
