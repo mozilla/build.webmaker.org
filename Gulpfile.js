@@ -123,7 +123,7 @@ gulp.task('less-app', function() {
  * files to be written before we move on to the next task,
  * because in this case we can't run parallel tasks.
  */
-gulp.task('app', ['lint-app', /*'jscs-app',*/ 'minify-app', 'less-app']);
+gulp.task('app', ['lint-app', /* 'jscs-app', */ 'minify-app', 'less-app']);
 // build things, without any kind of watching.
 gulp.task('build', ['app']);
 gulp.task('default', ['build']);
