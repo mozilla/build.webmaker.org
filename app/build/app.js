@@ -717,7 +717,7 @@ var Audience = React.createClass({
                   { className: "col lewis" },
                   React.createElement(
                     Persona,
-                    { name: "Sadia", location: "Kenya", occupation: "Teacher, Artist", motivators: "Community,Ambition,Attention,Self Expression" },
+                    { name: "Lewis", location: "Kenya", occupation: "Teacher, Artist", motivators: "Community,Ambition,Attention,Self Expression" },
                     React.createElement(
                       "p",
                       null,
@@ -1544,7 +1544,7 @@ var Heartbeat = React.createClass({
         { className: "main" },
         React.createElement(
           "div",
-          { id: "sprint" },
+          { className: "heartbeat" },
           p1s,
           p2s
         )
@@ -2231,7 +2231,7 @@ var IssueCard = React.createClass({
       null,
       React.createElement(
         "a",
-        { href: "{data.html_url}", target: "_blank" },
+        { href: data.html_url, target: "_blank" },
         React.createElement(
           "h4",
           null,
@@ -2296,7 +2296,7 @@ var Upcoming = React.createClass({
         { className: "main" },
         React.createElement(
           "div",
-          { id: "calendar" },
+          { className: "upcoming" },
           milestones
         )
       )

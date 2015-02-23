@@ -13,7 +13,7 @@ var IssueCard = React.createClass({
     var data = this.props.data;
     return (
       <li>
-          <a href="{data.html_url}" target="_blank">
+          <a href={data.html_url} target="_blank">
               <h4>{data.title}</h4>
               <Labels labels={data.labels}/>
           </a>
@@ -60,7 +60,7 @@ var Upcoming = React.createClass({
           <h2>Upcoming</h2>
         </div>
         <div className="main">
-            <div id="calendar">
+            <div className="upcoming">
               {milestones}
             </div>
         </div>

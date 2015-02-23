@@ -198,7 +198,7 @@ var Heartbeat = React.createClass({
           <Filter className="filter" fullset={this.state.query} doFilter={this.doFilter}/>
         </div>
         <div className="main">
-          <div id="sprint">
+          <div className="heartbeat">
             {p1s}
             {p2s}
           </div>
