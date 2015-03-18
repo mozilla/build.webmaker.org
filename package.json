@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "gulp-express": "^0.1.7",
-    "react-select": "^0.3.2"
+    "react-select": "^0.3.2",
+    "mofo-style": "latest"
   }
 }

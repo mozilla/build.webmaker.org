@@ -12,19 +12,20 @@ var Mention = React.createClass({
   },
   componentDidMount: function() {
     var comp = this;
-    var issuesRef = new Firebase("https://debt.firebaseio.com/issues")
-                         .child(this.props.comment.issue_id).on("value",
-      function(snapshot) {
+    new Firebase("https://debt.firebaseio.com/issues")
+      .child(this.props.comment.issue_id)
+      .on("value", function(snapshot) {
         var issue = snapshot.val();
         if (issue) {
           comp.setState({"issue": issue});
         }
       });
-    // get info from the issues firebase and set some properties based on that
+
+    //TODO: get info from the issues firebase and set some properties based on that
   },
   dismiss: function(fbid) {
-    var firebaseRef = new Firebase("https://debt.firebaseio.com/asks")
-                            .child(fbid).update({"dismissed": "true"});
+    new Firebase("https://debt.firebaseio.com/asks")
+      .child(fbid).update({"dismissed": "true"});
   },
   linesplit: function(thestring) {
     var lines = thestring.split("\n");
@@ -178,7 +179,10 @@ var Mentions = React.createClass({
   },
 
   componentWillMount: function() {
-    var firebaseRef = new Firebase("https://debt.firebaseio.com/asks").child(this.state.handle.toLowerCase());
+    var firebaseRef = new Firebase("https://debt.firebaseio.com/asks").child(
+      this.state.handle.toLowerCase()
+    );
+
     this.bindAsObject(firebaseRef, "mentions");
   },
 

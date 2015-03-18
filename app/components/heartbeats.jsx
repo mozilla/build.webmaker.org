@@ -1,8 +1,14 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 var React = require("react");
 var getJSON = require("./getJSON.jsx");
 var Labels = require("./labels.jsx");
 var APIServer = "/api";
 var Filter = require("./filter.jsx");
+var Firebase = require("firebase");
+var Showdown = require("showdown");
 var converter = new Showdown.converter();
 
 var Roles = React.createClass({
@@ -14,21 +20,22 @@ var Roles = React.createClass({
         "Lead Design":"",
         "Quality":""
       }
-    }
+    };
   },
   componentDidMount: function() {
     var comp = this;
     var id = this.props.issueId;
-    var issuesRef = new Firebase("https://webmakerbuild.firebaseio.com/issues").
-          child(id).
-          child("_roles").
-          on('value',
-      function(snapshot) {
-        var roles = snapshot.val();
-        if (roles) {
-          comp.setState({"_roles": roles})
+    new Firebase("https://webmakerbuild.firebaseio.com/issues")
+      .child(id)
+      .child("_roles")
+      .on('value',
+        function(snapshot) {
+          var roles = snapshot.val();
+          if (roles) {
+            comp.setState({"_roles": roles});
+          }
         }
-      })
+      );
   },
   render: function() {
     var rolelist = [];
@@ -49,23 +56,26 @@ var Roles = React.createClass({
       </ul>
     );
   }
-})
+});
 
 var Issue = React.createClass({
   getInitialState: function() {
     return {};
   },
   render: function() {
-
     var data = this.props.data;
+
     if (!data) {
       return <div/>;
     }
+
     var lines = data.body.split("\n");
     var trimmedBody = converter.makeHtml(lines[0]);
+
     var doClick = function() {
       location.href = data.html_url;
-    }
+    };
+
     var Img = data.assignee ?
       <img src={data.assignee.avatar_url}
            title="Assigned to"
@@ -124,9 +134,10 @@ var Heartbeat = React.createClass({
     getJSON(APIServer + "/" + self.props.path,
       function(data) {
         if (self.isMounted()) {
-          self.setState({ full: {p1:data.issues.p1, p2:data.issues.p2 },
-                          filtered: {p1:data.issues.p1, p2:data.issues.p2 }
-                        });
+          self.setState({
+            full: {p1:data.issues.p1, p2:data.issues.p2 },
+            filtered: {p1:data.issues.p1, p2:data.issues.p2 }
+          });
         }
       },
       function(err) {
@@ -134,9 +145,11 @@ var Heartbeat = React.createClass({
     );
   },
   doFilter: function(filterText) {
-    var matchingP1s=[];
-    var matchingP2s=[];
-    if (filterText == "") {
+
+    var matchingP1s = [];
+    var matchingP2s = [];
+
+    if (filterText === "") {
       this.setState({
           filtered: {
             p1: this.state.full.p1,
@@ -144,51 +157,58 @@ var Heartbeat = React.createClass({
           }
       });
     }
-    this.state.full.p1.forEach(function(issue){
+
+    this.state.full.p1.forEach(function(issue) {
       // Filtering on title, labels, and body
       var labels = issue.labels.map(function(label) { return label.name}).join(",");
-      if ((issue.title.toLowerCase().indexOf(filterText)!=-1) ||
-          (issue.body.toLowerCase().indexOf(filterText)!=-1) || 
-          (labels.toLowerCase().indexOf(filterText)!=-1)) {
+      if ((issue.title.toLowerCase().indexOf(filterText) !== -1) ||
+          (issue.body.toLowerCase().indexOf(filterText) !== -1) ||
+          (labels.toLowerCase().indexOf(filterText) !== -1)) {
         matchingP1s.push(issue);
       }
     });
     this.state.full.p2.forEach(function(issue){
       // Filtering on title, labels, and body
       var labels = issue.labels.map(function(label) { return label.name}).join(",");
-      if ((issue.title.toLowerCase().indexOf(filterText)!=-1) ||
-          (issue.body.toLowerCase().indexOf(filterText)!=-1) || 
-          (labels.toLowerCase().indexOf(filterText)!=-1)) {
+      if ((issue.title.toLowerCase().indexOf(filterText)!==-1) ||
+          (issue.body.toLowerCase().indexOf(filterText)!==-1) ||
+          (labels.toLowerCase().indexOf(filterText)!==-1)) {
         matchingP2s.push(issue);
       }
     });
 
     this.setState({
-        filtered: {
-          p1: matchingP1s,
-          p2: matchingP2s
-        }
+      filtered: {
+        p1: matchingP1s,
+        p2: matchingP2s
+      }
     });
   },
 
   render: function() {
-    var p1s, p2s;
+    var p1s;
+    var p2s;
+
     if (this.state.filtered.p1.length) {
       p1s = (<div>
           <h2>Top Priorities</h2>
           <IssuesList issues={this.state.filtered.p1}/>
-        </div>)
-    } else {
+        </div>);
+    }
+    else {
       p1s = null;
     }
+
     if (this.state.filtered.p2.length) {
       p2s = (<div>
           <h2>Other Priorities</h2>
           <IssuesList issues={this.state.filtered.p2}/>
-        </div>)
-    } else {
+        </div>);
+    }
+    else {
       p2s = null;
     }
+
     return (
       <div>
         <div className="header">
@@ -210,12 +230,12 @@ var Heartbeat = React.createClass({
 
 var Now = React.createClass({
   render: function() {
-    return <Heartbeat path="now" title="Current Heartbeat"/>;
+    return <Heartbeat path="now" title="Current Heartbeat" />;
   }
 });
 var Next = React.createClass({
   render: function() {
-    return <Heartbeat path="next" title="Next Heartbeat"/>;
+    return <Heartbeat path="next" title="Next Heartbeat" />;
   }
 });
 
