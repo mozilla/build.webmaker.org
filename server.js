@@ -201,6 +201,8 @@ app.get('/bugs', function(req, res) {
  */
 app.use(errorHandler());
 
+console.info('testing this');
+
 /**
  * Start Express server.
  */

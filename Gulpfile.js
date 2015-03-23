@@ -1,5 +1,6 @@
 var gulp = require('gulp');
-var server = require('gulp-express');
+var gls = require('gulp-live-server');
+var server = gls.new('server.js');
 var gulp = require('gulp');
 var watch = require('gulp-watch');
 var sourcemaps = require('gulp-sourcemaps');
@@ -156,9 +157,7 @@ gulp.task('liveserve', ['build'], function() {
 });
 
 gulp.task('serve', function() {
-  server.run({
-      file: 'server.js'
-  });
+  server.start();
   // Changes relevant to server:
   watch(serverSrc, function() {
     server.notify();
