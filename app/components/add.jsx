@@ -64,8 +64,9 @@ var Add = React.createClass({
             <button className="button" type="submit">Submit Project</button>
           </form>
         </div>
-      )
-    };
+      );
+    }
+
     return (
       <div>
         <div className="header">

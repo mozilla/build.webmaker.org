@@ -8,7 +8,7 @@ var Persona = React.createClass({
     var personaMotivators = this.props.motivators.split(',');
     var motivatorList = [];
     ['Attention', 'Community', 'Ambition', 'Self Expression'].forEach(function (m){
-      motivatorList.push(<li className={(personaMotivators.indexOf(m) > -1) ? 'on' : ''}>{m}</li>)
+      motivatorList.push(<li className={(personaMotivators.indexOf(m) > -1) ? 'on' : ''}>{m}</li>);
     });
     return motivatorList;
   },
