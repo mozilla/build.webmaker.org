@@ -88,8 +88,8 @@ app.get('/api/team/:team', function(req, res) {
   });
 });
 app.get('/api/github/search/issues', function(req, res) {
-  var sort = req.query.sort || "updated";
-  var order = req.query.order || "asc";
+  var sort = req.query.sort || 'updated';
+  var order = req.query.order || 'asc';
   github.search(req.query.q, sort, order, function(err, body) {
     if (err) res.redirect('/500');
     res.type('application/json; charset=utf-8').send(body);
@@ -119,7 +119,7 @@ app.get('/auth/github/:path', function(req, res) {
   oauthCB(req, res, req.params.path);
 });
 app.get('/auth/github', function(req, res) {
-  oauthCB(req, res, "");
+  oauthCB(req, res, '');
 });
 
 function processCallback(req, res, path) {
@@ -144,7 +144,7 @@ function processCallback(req, res, path) {
           res.cookie('github', body, { maxAge: 900000 });
 
           // res.redirect("/#/"+path); // Remove this when we move away from # URLs
-          res.redirect("/"+path); // Remove this when we move away from # URLs
+          res.redirect('/'+path); // Remove this when we move away from # URLs
         }
       });
     }
@@ -154,7 +154,7 @@ app.get('/auth/callback/:path', function (req, res) {
   processCallback(req, res, req.params.path);
 });
 app.get('/auth/callback', function (req, res) {
-  processCallback(req, res, "");
+  processCallback(req, res, '');
 });
 
 
@@ -167,28 +167,31 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/add', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/next', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/now', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/upcoming', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/design', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/audience', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
+});
+app.get('/dashboards', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/bugs', function(req, res) {
-  res.sendFile(path.join(__dirname, './app/public/index.html'))
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 
 
