@@ -178,8 +178,10 @@ var Mentions = React.createClass({
   },
 
   componentWillMount: function() {
-    var firebaseRef = new Firebase("https://debt.firebaseio.com/asks").child(this.state.handle.toLowerCase());
-    this.bindAsObject(firebaseRef, "mentions");
+    if (this.state.handle) {
+      var firebaseRef = new Firebase("https://debt.firebaseio.com/asks").child(this.state.handle.toLowerCase());
+      this.bindAsObject(firebaseRef, "mentions");
+    }
   },
 
   onChange: function(e) {

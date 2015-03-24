@@ -34,3 +34,9 @@ result in a server reload in <2s.  LESS changes are processed almost instantly.
 
 Once running you can view the local server by navigating to: http://localhost:8080. If you prefer a different port, you can add a `PORT` variable to `.env`.
 
+#### Adding a new route
+
+1. Add to `/app/components/app.jsx`
+2. Create new .jsx file in `/components`
+3. Add to `/server.js` to enable this page to be loaded directly
+
