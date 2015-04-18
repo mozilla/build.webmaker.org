@@ -20,11 +20,18 @@ var cors = require('cors');
 var expressValidator = require('express-validator');
 var issueParser = require('./server/issueparser.js');
 var processHook = issueParser.processHook;
+var request = require( "request" );
+var cache = require( "./lib/cache" );
 
 /**
  * Import API keys from environment
  */
 var secrets = require('./server/config/secrets');
+
+/**
+ * Controllers (route handlers).
+ */
+var routes = require( "./routes" )(secrets);
 
 /**
  * Github handlers
@@ -201,7 +208,66 @@ app.get('/myissues', function(req, res) {
 app.get('/bugs', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
+app.get('/issues', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
+});
 
+// Cache check middleware: if the URL is in cache, use that.
+function checkCache( req, res, next ) {
+  if ( checkCache.overrides[ req.url ] ) {
+    delete checkCache.overrides[ req.url ];
+    next();
+    return;
+  }
+  cache.read( req.url, function( err, data ) {
+    if ( err || !data ) {
+      next( err );
+      return;
+    }
+    res.json( data );
+  });
+}
+checkCache.overrides = {};
+
+app.get( "/github/repos", checkCache, routes.api.github.repos );
+app.get( "/github/repo-names", checkCache, routes.api.github.repoNames );
+app.get( "/github/users", checkCache, routes.api.github.users );
+app.get( "/github/labels", checkCache, routes.api.github.labels );
+app.get( "/github/milestones", checkCache, routes.api.github.milestones );
+
+// To increase client-side performance, we prime the cache with data we'll need.
+// Each resource (route URL) can specify a unique frequency for updates. If
+// none is given, the cache expiration time is used.
+function primeCache( urlPrefix ) {
+  // { url: "url-for-route", frequency: update-period-in-ms }
+  [
+    { url: "/github/repos" },
+    { url: "/github/repo-names" },
+    { url: "/github/users" },
+    { url: "/github/labels" },
+    { url: "/github/milestones" }
+  ].forEach( function( resource ) {
+    var url = resource.url,
+        frequency = resource.frequency || 60 * 10 * 1000; // 10 mins
+
+    function updateResource() {
+      checkCache.overrides[ url ] = true;
+      request.get( urlPrefix + url, function( err, resp, body ) {
+        if ( err ) {
+          return console.log( "Error updating cache entry for %s: %s", url, err );
+        }
+        cache.write( url, JSON.parse(body) );
+      });
+    }
+
+    // Setup a timer to do this update, and also do one now
+    updateResource();
+    update = setInterval( updateResource, frequency );
+    update.unref();
+  });
+}
+
+primeCache("http://localhost:" + app.get('port'));
 
 /**
  * Webhook handler (from github)
