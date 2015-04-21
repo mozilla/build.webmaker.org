@@ -49,25 +49,25 @@ var Issues = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.getJson("/github/users", function(data) {
+    this.getJson("/api/github/foundation-users", function(data) {
       this.setState({
         users: data
       });
     }.bind(this));
 
-    this.getJson("/github/repo-names", function(data) {
+    this.getJson("/api/github/mozilla-repo-names", function(data) {
       this.setState({
         repos: data
       });
     }.bind(this));
 
-    this.getJson("/github/labels", function(data) {
+    this.getJson("/api/github/mozilla-labels", function(data) {
       this.setState({
         labels: data
       });
     }.bind(this));
 
-    this.getJson("/github/milestones", function(data) {
+    this.getJson("/api/github/mozilla-milestones", function(data) {
       this.setState({
         milestones: data
       });

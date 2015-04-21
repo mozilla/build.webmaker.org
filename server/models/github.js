@@ -8,17 +8,16 @@
 var async = require('async');
 var lru = require('lru-cache');
 var request = require('request');
-var secrets = require('../config/secrets');
 
 /**
  * Constructor
  */
-function Github(client, secret) {
+function Github(githubSecrets) {
   var _this = this;
 
-  _this.client = client;
-  _this.secret = secret;
-  _this.token = secrets.github.token;
+  _this.client = githubSecrets.client;
+  _this.secret = githubSecrets.secret;
+  _this.token = githubSecrets.token;
   _this.host = 'https://api.github.com';
   _this.repo = '/repos/MozillaFoundation/plan';
   _this.cache = lru({
@@ -88,6 +87,42 @@ function Github(client, secret) {
 }
 
 
+
+Github.prototype.githubRequest = function(options, callback) {
+  var accessToken = this.token;
+  var url = "https://api.github.com/" + options.query + "?access_token=" + accessToken + "&page=";
+  var collection = [];
+
+  // Fetch deals with multiple pages.
+  // The data this code deals with is small enough,
+  // so just return all pages worth of data.
+  function fetch(page) {
+    request({
+      url: url + page,
+      headers: {
+        "user-agent": "build.webmaker.org" // GitHub is a diva without a unique user agent
+      }
+    }, function(error, response, body) {
+      var data = JSON.parse(body);
+      if (data.length) {
+        collection = collection.concat(data);
+        // We have new data, keep going.
+        fetch(++page);
+      } else if (collection.length) {
+        // Looks like we're done.
+        callback(error, collection);
+      } else if (data.message) {
+        // Likely an error.
+        callback(data);
+      } else {
+        // Likely dealing with non array data. We can stop.
+        callback(error, data);
+      }
+    });
+  }
+
+  fetch(0);
+};
 
 Github.prototype.githubJSON = function(fragment, callback) {
   var _this = this;
@@ -170,6 +205,83 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
  */
 Github.prototype.getMilestones = function(callback) {
   this.githubJSON(this.repo + '/milestones', callback);
+};
+
+Github.prototype.getRepos = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequest({
+      query: "orgs/" + item + "/repos"
+    }, callback);
+  }.bind(this), function(err, results) {
+    callback(err, results);
+  });
+};
+
+Github.prototype.getUsersForOrgs = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequest({
+      query: "orgs/" + item + "/members"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var users = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(user) {
+        if (users.indexOf(user.login) === -1) {
+          users.push(user.login);
+        }
+      });
+      callback(err, users);
+    }
+  });
+};
+
+Github.prototype.getMilestonesForRepos = function(repos, callback) {
+  async.concat(repos, function(item, callback) {
+    var orgName = item.repo;
+    var repoName = item.org;
+    this.githubRequest({
+      query: "repos/" + item + "/milestones"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var collection = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(item) {
+        if (collection.indexOf(item.title) === -1) {
+          collection.push(item.title);
+        }
+      });
+      callback(err, collection);
+    }
+  });
+};
+
+Github.prototype.getLabelsForRepos = function(repos, callback) {
+  async.concat(repos, function(item, callback) {
+    var orgName = item.repo;
+    var repoName = item.org;
+    this.githubRequest({
+      query: "repos/" + item + "/labels"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var collection = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(item) {
+        if (collection.indexOf(item.name) === -1) {
+          collection.push(item.name);
+        }
+      });
+      callback(err, collection);
+    }
+  });
 };
 
 Github.prototype.getIssuesForMilestone = function(id, callback) {

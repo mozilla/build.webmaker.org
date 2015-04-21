@@ -32,11 +32,7 @@ var secrets = require('./server/config/secrets');
  * Github handlers
  */
 var Github = require('./server/models/github');
-var github = new Github(
-  secrets.github.clientID,
-  secrets.github.clientSecret
-);
-
+var github = new Github(secrets.github);
 
 /**
  * Create Express server.
@@ -46,7 +42,7 @@ var app = express();
 /**
  * Controllers (route handlers).
  */
-var routes = require( "./routes" )(app, secrets);
+var routes = require( "./routes" )();
 
 /**
  * Express configuration.
@@ -229,23 +225,83 @@ function checkCache( req, res, next ) {
 }
 checkCache.overrides = {};
 
-app.get( "/github/repos", checkCache, routes.api.github.repos );
-app.get( "/github/repo-names", checkCache, routes.api.github.repoNames );
-app.get( "/github/users", checkCache, routes.api.github.users );
-app.get( "/github/labels", checkCache, routes.api.github.labels );
-app.get( "/github/milestones", checkCache, routes.api.github.milestones );
+var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.org goggles.webmaker.org webmaker-tests sawmill login.webmaker.org openbadges-badgekit webmaker-app api.webmaker.org popcorn.webmaker.org webmaker-mediasync webmaker.org webmaker-app-cordova webmaker-metrics nimble mozilla-opennews teach-api mozillafestival.org call-congress-net-neutrality thimble.webmaker.org advocacy.mozilla.org privacybadges webmaker-profile-2 call-congress build.webmaker.org webmaker-landing-pages webliteracymap events.webmaker.org badgekit-api openbadges-specification make-valet webmaker-auth webmaker-events-service webmaker-language-picker MakeAPI blog.webmaker.org webmaker-login-ux webmaker-desktop webmaker-app-publisher badges.mozilla.org lumberyard webmaker-download-locales webmaker-addons bsd-forms-and-wrappers popcorn-js hivelearningnetworks.org webmaker-firehose makeapi-client makerstrap webmaker-app-bot webmaker-screenshot react-i18n webmaker-kits-builder webmaker-app-guide".split(" ");
+var orgs = ["MozillaFoundation", "MozillaScience"];
 
+app.get( "/api/github/mozilla-repo-names", checkCache, function(req, res) {
+  // Get Foundation repos then merge them with a static list of mozilla repos.
+  github.getRepos(orgs, function(err, results) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      var repoNames = [];
+      results.forEach(function(repo) {
+        repoNames.push(repo.full_name);
+      });
+      // Merge with static list of mozilla repos.
+      res.json( repoNames.concat(mozillaRepos.map(function(item) {
+        return "mozilla/" + item;
+      })));
+    }
+  });
+});
+app.get( "/api/github/foundation-users", checkCache, function(req, res) {
+  github.getUsersForOrgs(orgs, function(err, results) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+app.get( "/api/github/mozilla-labels", checkCache, function(req, res) {
+  var url = "http://127.0.0.1:" + app.get('port') + "/api/github/mozilla-repo-names";
+  request(url, function (error, response, body) {
+    if (error) {
+      console.log(error);
+    } else if (!error && response.statusCode == 200) {
+      var repos = JSON.parse(body);
+      github.getLabelsForRepos(repos, function(err, results) {
+        if (err) {
+          // Not sure what to do with errors, yet.
+          console.log(err);
+        } else {
+          res.json(results);
+        }
+      });
+    }
+  });
+});
+app.get( "/api/github/mozilla-milestones", checkCache, function(req, res) {
+  var url = "http://127.0.0.1:" + app.get('port') + "/api/github/mozilla-repo-names";
+  request(url, function (error, response, body) {
+    if (error) {
+      console.log(error);
+    } else if (!error && response.statusCode == 200) {
+      var repos = JSON.parse(body);
+      github.getMilestonesForRepos(repos, function(err, results) {
+        if (err) {
+          // Not sure what to do with errors, yet.
+          console.log(err);
+        } else {
+          res.json(results);
+        }
+      });
+    }
+  });
+});
 // To increase client-side performance, we prime the cache with data we'll need.
 // Each resource (route URL) can specify a unique frequency for updates. If
 // none is given, the cache expiration time is used.
 function primeCache( urlPrefix ) {
   // { url: "url-for-route", frequency: update-period-in-ms }
   [
-    { url: "/github/repos" },
-    { url: "/github/repo-names" },
-    { url: "/github/users" },
-    { url: "/github/labels" },
-    { url: "/github/milestones" }
+    { url: "/api/github/mozilla-repo-names" },
+    { url: "/api/github/foundation-users" },
+    { url: "/api/github/mozilla-labels" },
+    { url: "/api/github/mozilla-milestones" }
   ].forEach( function( resource ) {
     var url = resource.url,
         frequency = resource.frequency || 60 * 60 * 1000; // Default: every hour
@@ -271,6 +327,9 @@ primeCache("http://127.0.0.1:" + app.get('port'));
 /**
  * Webhook handler (from github)
  */
+github.githubRequest({query:"rate_limit"}, function(err, data) {
+  console.log("Github API requests left: " + data.rate.remaining);
+});
 
 /**
  * 500 Error Handler.
