@@ -1,4 +1,3 @@
-var getAll = require('get-all');
 //var config = require("./config.js");
 //var auth = config.get("GITHUB_AUTH");
 var request = require('request');
@@ -9,11 +8,10 @@ var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.
 // Has not been touched this year.
 // eoy-fundraising openbadges-validator studiomofo node-webmaker-i18n eoy-charts slowparse openbadges-bakery-service openbadges-backpack popcorn-docs mofo-design makedrive openbadges-badges nimble.webmaker.org 2014.mozillafestival.org badge-the-world webmaker-suite webmaker-auth-client webmaker-analytics parapara school-of-webmaking openbadges-cem makerparty badgekit-api-client webmaker-locales-mapping-configuration webmaker-whitepaper makeapi-docs mozilla-badges friendlycode webmaker-personas node-webmaker-postalservice filer-redis hackablegames webmaker-user-client hookshot webmaker-profile-service webmaker-profile webmaker-kits django-badgekit badgekit-backpack webmaker-rid openbadges-bakery node-hubble openbadges-discovery htmlsanitizer.org webmaker-events openbadges-validator-service badgekit-api-python-client mozbadging mozilla-ignite openbadger webmaker-translation-stats mozillawebmakerproxy.net openbadges.org web-literacy-client mozilla-bsd-cache webmaker-login-example MakeAPI-Gallery webmaker-ui sciencelab badg.us node-webmaker-loginapi".split(" ");
 
-// Just really old.
+// Just silly old.
 // butter ceci openbadges-badgestudio appmaker-components teach-appmaker content-2012.mozillafestival.org badges.mozillafestival.org openbadger-client node-webmaker-butler badgeopolis openbadges-backpack-archived ceci-bower appmaker-words popcornjs.org make.mozilla.org wp.mozilla-ignite.org community.openbadges.org mozilla-ignite-learning-lab-demos webmaker-firehose-archive openbadges-verifier webmaker-nav mozilla-ignite-learning-lab-videos webmakers-tumblr popcorn_maker splash.mozilla-ignite.org popcorn-interim".split(" ");
 
-module.exports = function(githubSecrets) {
-
+module.exports = function(app, githubSecrets) {
 
   function githubRequest(options, callback) {
     var accessToken = githubSecrets.token;
@@ -38,6 +36,8 @@ module.exports = function(githubSecrets) {
         } else if (collection.length) {
           // Looks like we're done.
           callback(error, collection);
+        } else if (data.message) {
+          callback(data);
         } else {
           // Likely dealing with non array data. We can stop.
           callback(error, data);
@@ -61,7 +61,7 @@ module.exports = function(githubSecrets) {
       orgs.forEach(function(org) {
         githubRequest({
           query: "orgs/" + org + "/repos"
-        }, function(err, results,response) {
+        }, function(err, results) {
           waiting--;
           if (err) {
             console.log(err);
@@ -69,9 +69,9 @@ module.exports = function(githubSecrets) {
             results.forEach(function(repo) {
               repos.push(repo);
             });
-            if (!waiting) {
-              res.json( repos );
-            }
+          }
+          if (!waiting) {
+            res.json( repos );
           }
         });
       });
@@ -79,7 +79,7 @@ module.exports = function(githubSecrets) {
     repoNames: function(req, res) {
       var repoNames = [];
       var repos = [];
-      request("http://localhost:8080/github/repos", function (error, response, body) {
+      request("http://127.0.0.1:" + app.get('port') + "/github/repos", function (error, response, body) {
         if (!error && response.statusCode == 200) {
           repos = JSON.parse(body);
           
@@ -106,18 +106,20 @@ module.exports = function(githubSecrets) {
             console.log(err);
           } else {
             results.forEach(function(user) {
-              users.push(user.login);
+              if (users.indexOf(user.login) === -1) {
+                users.push(user.login);
+              }
             });
-            if (!waiting) {
-              res.json( users );
-            }
+          }
+          if (!waiting) {
+            res.json( users );
           }
         });
       });
     },
     milestones: function(req, res) {
 
-      request("http://localhost:8080/github/repos", function (error, response, body) {
+      request("http://127.0.0.1:" + app.get('port') + "/github/repos", function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var repos = JSON.parse(body);
           var waiting = repos.length + mozillaRepos.length;
@@ -132,11 +134,13 @@ module.exports = function(githubSecrets) {
                 console.log(err);
               } else {
                 results.forEach(function(item) {
-                  collection.push(item.title);
+                  if (collection.indexOf(item.title) === -1) {
+                    collection.push(item.title);
+                  }
                 });
-                if (!waiting) {
-                  res.json( collection );
-                }
+              }
+              if (!waiting) {
+                res.json( collection );
               }
             });
           });
@@ -149,11 +153,13 @@ module.exports = function(githubSecrets) {
                 console.log(err);
               } else {
                 results.forEach(function(item) {
-                  collection.push(item.title);
+                  if (collection.indexOf(item.title) === -1) {
+                    collection.push(item.title);
+                  }
                 });
-                if (!waiting) {
-                  res.json( collection );
-                }
+              }
+              if (!waiting) {
+                res.json( collection );
               }
             });
           });
@@ -161,7 +167,7 @@ module.exports = function(githubSecrets) {
       });
     },
     labels: function(req, res) {
-      request("http://localhost:8080/github/repos", function (error, response, body) {
+      request("http://127.0.0.1:" + app.get('port') + "/github/repos", function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var repos = JSON.parse(body);
           var waiting = repos.length + mozillaRepos.length;
@@ -176,11 +182,13 @@ module.exports = function(githubSecrets) {
                 console.log(err);
               } else {
                 results.forEach(function(item) {
-                  collection.push(item.name);
+                  if (collection.indexOf(item.name) === -1) {
+                    collection.push(item.name);
+                  }
                 });
-                if (!waiting) {
-                  res.json( collection );
-                }
+              }
+              if (!waiting) {
+                res.json( collection );
               }
             });
           });
@@ -194,11 +202,13 @@ module.exports = function(githubSecrets) {
                 console.log(err);
               } else {
                 results.forEach(function(item) {
-                  collection.push(item.name);
+                  if (collection.indexOf(item.name) === -1) {
+                    collection.push(item.name);
+                  }
                 });
-                if (!waiting) {
-                  res.json( collection );
-                }
+              }
+              if (!waiting) {
+                res.json( collection );
               }
             });
           });
@@ -206,6 +216,5 @@ module.exports = function(githubSecrets) {
       });
     }
   };
-
 };
 

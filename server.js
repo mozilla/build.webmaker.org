@@ -29,11 +29,6 @@ var cache = require( "./lib/cache" );
 var secrets = require('./server/config/secrets');
 
 /**
- * Controllers (route handlers).
- */
-var routes = require( "./routes" )(secrets);
-
-/**
  * Github handlers
  */
 var Github = require('./server/models/github');
@@ -47,6 +42,11 @@ var github = new Github(
  * Create Express server.
  */
 var app = express();
+
+/**
+ * Controllers (route handlers).
+ */
+var routes = require( "./routes" )(app, secrets);
 
 /**
  * Express configuration.
@@ -248,7 +248,7 @@ function primeCache( urlPrefix ) {
     { url: "/github/milestones" }
   ].forEach( function( resource ) {
     var url = resource.url,
-        frequency = resource.frequency || 60 * 10 * 1000; // 10 mins
+        frequency = resource.frequency || 60 * 60 * 1000; // Default: every hour
 
     function updateResource() {
       checkCache.overrides[ url ] = true;
@@ -262,12 +262,11 @@ function primeCache( urlPrefix ) {
 
     // Setup a timer to do this update, and also do one now
     updateResource();
-    update = setInterval( updateResource, frequency );
-    update.unref();
+    setInterval( updateResource, frequency ).unref();
   });
 }
 
-primeCache("http://localhost:" + app.get('port'));
+primeCache("http://127.0.0.1:" + app.get('port'));
 
 /**
  * Webhook handler (from github)
