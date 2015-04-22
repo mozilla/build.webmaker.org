@@ -1,5 +1,17 @@
 var React = require("react");
 
+var AutoCompleteDataList = React.createClass({
+  render: function() {
+    return (
+      <datalist id={this.props.id}>
+        {this.props.data.map(function(item, index) {
+          return (<option key={index} value={item}>{item}</option>);
+        })}
+      </datalist>
+    );
+  }
+});
+
 var Issues = React.createClass({
   getJson: function(url, callback) {
     var httpRequest = new XMLHttpRequest();
@@ -76,7 +88,6 @@ var Issues = React.createClass({
   render: function() {
     var query = this.state.query;
     var term = this.state.term;
-    var _this = this;
     var queryString = "org:MozillaFoundation+org:mozilla+";
     queryString += query.map(function(item) {
       return item.searchTerm;
@@ -103,31 +114,11 @@ var Issues = React.createClass({
             <span className="input-container">
               <input onChange={this.onChange} className="do-search-input" placeholder="search term" value={term} list={this.state.search}/>
             </span>
-            <datalist id="assignee">
-              {this.state.users.map(function(item, index) {
-                return (<option key={index} value={item}>{item}</option>);
-              })}
-            </datalist>
-            <datalist id="author">
-              {this.state.users.map(function(item, index) {
-                return (<option key={index} value={item}>{item}</option>);
-              })}
-            </datalist>
-            <datalist id="repo">
-              {this.state.repos.map(function(item, index) {
-                return (<option key={index} value={item}>{item}</option>);
-              })}
-            </datalist>
-            <datalist id="milestone">
-              {this.state.milestones.map(function(item, index) {
-                return (<option key={index} value={item}>{item}</option>);
-              })}
-            </datalist>
-            <datalist id="label">
-              {this.state.labels.map(function(item, index) {
-                return (<option key={index} value={item}>{item}</option>);
-              })}
-            </datalist>
+            <AutoCompleteDataList id="assignee" data={this.state.users}/>
+            <AutoCompleteDataList id="author" data={this.state.users}/>
+            <AutoCompleteDataList id="repo" data={this.state.repos}/>
+            <AutoCompleteDataList id="milestone" data={this.state.milestones}/>
+            <AutoCompleteDataList id="label" data={this.state.labels}/>
             <div className="clear-fix"><button type="submit" className="pull-right button">add</button></div>
           </form>
           <ul>
