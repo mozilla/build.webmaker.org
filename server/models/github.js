@@ -12,7 +12,7 @@ var request = require('request');
 /**
  * Constructor
  */
-function Github(githubSecrets) {
+function Github(githubSecrets, cacheAge) {
   var _this = this;
 
   _this.client = githubSecrets.client;
@@ -21,8 +21,8 @@ function Github(githubSecrets) {
   _this.host = 'https://api.github.com';
   _this.repo = '/repos/MozillaFoundation/plan';
   _this.cache = lru({
-    max: 100,
-    maxAge: 1000 * 60 * 5
+    max: 500,
+    maxAge: cacheAge || 60 * 60 * 1000 // default: every hour
   });
 
   /**
@@ -92,11 +92,15 @@ Github.prototype.githubRequest = function(options, callback) {
   var accessToken = this.token;
   var url = "https://api.github.com/" + options.query + "?access_token=" + accessToken + "&page=";
   var collection = [];
+  var copy = this.cache.get(url);
+  if (typeof copy !== 'undefined') {
+    return callback(null, copy);
+  }
 
   // Fetch deals with multiple pages.
   // The data this code deals with is small enough,
   // so just return all pages worth of data.
-  function fetch(page) {
+  var fetch = function(page) {
     request({
       url: url + page,
       headers: {
@@ -110,16 +114,18 @@ Github.prototype.githubRequest = function(options, callback) {
         fetch(++page);
       } else if (collection.length) {
         // Looks like we're done.
+        this.cache.set(url, collection);
         callback(error, collection);
       } else if (data.message) {
         // Likely an error.
         callback(data);
       } else {
         // Likely dealing with non array data. We can stop.
+        this.cache.set(url, data);
         callback(error, data);
       }
-    });
-  }
+    }.bind(this));
+  }.bind(this);
 
   fetch(0);
 };
@@ -197,6 +203,9 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
   });
 };
 
+var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.org goggles.webmaker.org webmaker-tests sawmill login.webmaker.org openbadges-badgekit webmaker-app api.webmaker.org popcorn.webmaker.org webmaker-mediasync webmaker.org webmaker-app-cordova webmaker-metrics nimble mozilla-opennews teach-api mozillafestival.org call-congress-net-neutrality thimble.webmaker.org advocacy.mozilla.org privacybadges webmaker-profile-2 call-congress build.webmaker.org webmaker-landing-pages webliteracymap events.webmaker.org badgekit-api openbadges-specification make-valet webmaker-auth webmaker-events-service webmaker-language-picker MakeAPI blog.webmaker.org webmaker-login-ux webmaker-desktop webmaker-app-publisher badges.mozilla.org lumberyard webmaker-download-locales webmaker-addons bsd-forms-and-wrappers popcorn-js hivelearningnetworks.org webmaker-firehose makeapi-client makerstrap webmaker-app-bot webmaker-screenshot react-i18n webmaker-kits-builder webmaker-app-guide".split(" ");
+var foundationOrgs = ["MozillaFoundation", "MozillaScience"];
+
 /**
  * Returns an array of milestones from the "plan" repo.
  *
@@ -207,7 +216,7 @@ Github.prototype.getMilestones = function(callback) {
   this.githubJSON(this.repo + '/milestones', callback);
 };
 
-Github.prototype.getRepos = function(orgs, callback) {
+Github.prototype.getReposFromOrgs = function(orgs, callback) {
   async.concat(orgs, function(item, callback) {
     this.githubRequest({
       query: "orgs/" + item + "/repos"
@@ -217,6 +226,23 @@ Github.prototype.getRepos = function(orgs, callback) {
   });
 };
 
+Github.prototype.getMozillaRepos = function(callback) {
+  this.getReposFromOrgs(foundationOrgs, function(err, results) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      callback(err);
+    } else {
+      var repoNames = [];
+      results.forEach(function(repo) {
+        repoNames.push(repo.full_name);
+      });
+      // Merge with static list of mozilla repos.
+      callback(err, repoNames.concat(mozillaRepos.map(function(item) {
+        return "mozilla/" + item;
+      })));
+    }
+  });
+};
 Github.prototype.getUsersForOrgs = function(orgs, callback) {
   async.concat(orgs, function(item, callback) {
     this.githubRequest({
@@ -235,6 +261,12 @@ Github.prototype.getUsersForOrgs = function(orgs, callback) {
       });
       callback(err, users);
     }
+  });
+};
+
+Github.prototype.getFoundationUsers = function(callback) {
+  this.getUsersForOrgs(foundationOrgs, function(err, results) {
+    callback(err, results);
   });
 };
 
