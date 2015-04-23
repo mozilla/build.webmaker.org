@@ -294,7 +294,11 @@ function primeCache( urlPrefix ) {
 primeCache(app.get("host") + ":" + app.get('port'));
 
 github.githubRequest({query:"rate_limit"}, function(err, data) {
-  console.log("Github API requests left: " + data.rate.remaining);
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Github API requests left: " + data.rate.remaining);
+  }
 });
 
 /**
