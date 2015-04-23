@@ -90,7 +90,7 @@ function Github(githubSecrets, cacheAge) {
 
 Github.prototype.githubRequest = function(options, callback) {
   var accessToken = this.token;
-  var url = "https://api.github.com/" + options.query + "?access_token=" + accessToken + "&page=";
+  var url = "https://api.github.com/" + options.query + "?page=";
   var collection = [];
   var copy = this.cache.get(url);
   if (typeof copy !== 'undefined') {
@@ -102,9 +102,13 @@ Github.prototype.githubRequest = function(options, callback) {
   // so just return all pages worth of data.
   var fetch = function(page) {
     request({
-      url: url + page,
+      method: 'GET',
+      uri: url + page,
+      json: {},
       headers: {
-        "user-agent": "build.webmaker.org" // GitHub is a diva without a unique user agent
+        'User-Agent': 'build.webmaker.org',
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: 'token ' + accessToken
       }
     }, function(error, response, body) {
       var data = JSON.parse(body);
