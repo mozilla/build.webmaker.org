@@ -111,22 +111,26 @@ Github.prototype.githubRequest = function(options, callback) {
         Authorization: 'token ' + accessToken
       }
     }, function(error, response, body) {
-      var data = JSON.parse(body);
-      if (data.length) {
-        collection = collection.concat(data);
-        // We have new data, keep going.
-        fetch(++page);
-      } else if (collection.length) {
-        // Looks like we're done.
-        this.cache.set(url, collection);
-        callback(error, collection);
-      } else if (data.message) {
-        // Likely an error.
-        callback(data);
+      if (error) {
+        console.log(error);
       } else {
-        // Likely dealing with non array data. We can stop.
-        this.cache.set(url, data);
-        callback(error, data);
+        var data = JSON.parse(body);
+        if (data.length) {
+          collection = collection.concat(data);
+          // We have new data, keep going.
+          fetch(++page);
+        } else if (collection.length) {
+          // Looks like we're done.
+          this.cache.set(url, collection);
+          callback(error, collection);
+        } else if (data.message) {
+          // Likely an error.
+          callback(data);
+        } else {
+          // Likely dealing with non array data. We can stop.
+          this.cache.set(url, data);
+          callback(error, data);
+        }
       }
     }.bind(this));
   }.bind(this);
