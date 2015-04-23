@@ -110,11 +110,10 @@ Github.prototype.githubRequest = function(options, callback) {
         Accept: 'application/vnd.github.v3+json',
         Authorization: 'token ' + accessToken
       }
-    }, function(error, response, body) {
+    }, function(error, response, data) {
       if (error) {
         console.log(error);
       } else {
-        var data = JSON.parse(body);
         if (data.length) {
           collection = collection.concat(data);
           // We have new data, keep going.
