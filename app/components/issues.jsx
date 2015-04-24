@@ -88,10 +88,18 @@ var Issues = React.createClass({
   render: function() {
     var query = this.state.query;
     var term = this.state.term;
-    var queryString = "org:MozillaFoundation+org:mozilla+";
+    var queryString = "";
+    var needsOrgs = true;
+    var defaultOrgs = "org:MozillaFoundation+org:mozilla+org:MozillaScience+";
     queryString += query.map(function(item) {
+      if (item.search === "repo") {
+        needsOrgs = false;
+      }
       return item.searchTerm;
     }).join("+");
+    if (needsOrgs) {
+      queryString = defaultOrgs + queryString;
+    }
     var link = "https://github.com/issues?utf8=✓&q=" + queryString;
     var doneButton;
     if (query.length) {
@@ -110,6 +118,7 @@ var Issues = React.createClass({
               <option value="label">Label</option>
               <option value="milestone">Milestone</option>
               <option value="repo">Repo</option>
+              <option value="mentions" selected>Mentions</option>
             </select>
             <span className="input-container">
               <input onChange={this.onChange} className="do-search-input" placeholder="search term" value={term} list={this.state.search}/>
@@ -119,6 +128,7 @@ var Issues = React.createClass({
             <AutoCompleteDataList id="repo" data={this.state.repos}/>
             <AutoCompleteDataList id="milestone" data={this.state.milestones}/>
             <AutoCompleteDataList id="label" data={this.state.labels}/>
+            <AutoCompleteDataList id="mentions" data={this.state.users}/>
             <div className="clear-fix"><button type="submit" className="pull-right button">add</button></div>
           </form>
           <ul>
