@@ -48,7 +48,7 @@ var Issues = React.createClass({
     var query = this.state.query;
     query.push({
       search: this.state.search,
-      searchTerm: this.state.search + ":" + this.state.term
+      searchTerm: this.state.search + ":\"" + this.state.term + "\""
     });
     this.setState({
       query: query,
