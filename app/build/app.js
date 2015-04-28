@@ -2280,23 +2280,9 @@ var Labels = require("./labels.jsx");
 
 var IssueCard = React.createClass({
   displayName: "IssueCard",
-  getInitialState: function () {
-    return {};
-  },
-
-  getShortRepoString: function (fullUrl) {
-    var s = fullUrl;
-    s = s.replace("https://github.com/", "");
-    var i = s.indexOf("/");
-    s = s.slice(i + 1);
-    i = s.indexOf("/");
-    s = s.slice(0, i);
-    return s;
-  },
-
   render: function () {
     var data = this.props.data;
-    var repo = this.getShortRepoString(data.html_url);
+    //var repo = this.getShortRepoString(data.html_url);
     return React.createElement(
       "li",
       null,
@@ -2312,7 +2298,7 @@ var IssueCard = React.createClass({
           React.createElement(
             "small",
             null,
-            repo
+            data.repository.name
           )
         ),
         React.createElement(Labels, { labels: data.labels, minimal: "true" })

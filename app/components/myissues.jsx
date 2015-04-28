@@ -5,28 +5,12 @@ var APIServer = "/api";
 var Labels = require("./labels.jsx");
 
 var IssueCard = React.createClass({
-  getInitialState: function() {
-    return {
-    };
-  },
-
-  getShortRepoString: function (fullUrl) {
-    var s = fullUrl;
-    s = s.replace("https://github.com/", "");
-    var i = s.indexOf("/");
-    s = s.slice(i+1);
-    i = s.indexOf("/");
-    s = s.slice(0, i);
-    return s;
-  },
-
   render: function() {
     var data = this.props.data;
-    var repo = this.getShortRepoString(data.html_url);
     return (
       <li>
           <a href={data.html_url} target="_blank">
-              <h4>{data.title} <br/><small>{repo}</small></h4>
+              <h4>{data.title} <br/><small>{data.repository.name}</small></h4>
               <Labels labels={data.labels} minimal='true' />
           </a>
       </li>
