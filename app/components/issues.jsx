@@ -1,4 +1,5 @@
 var React = require("react");
+var getJSON = require("./getJSON.jsx");
 
 var AutoCompleteDataList = React.createClass({
   render: function() {
@@ -13,20 +14,6 @@ var AutoCompleteDataList = React.createClass({
 });
 
 var Issues = React.createClass({
-  getJson: function(url, callback) {
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function() {
-      var data = {};
-      if (httpRequest.readyState === 4) {
-        if (httpRequest.status === 200) {
-          data = JSON.parse(httpRequest.responseText);
-          callback(data);
-        }
-      }
-    };
-    httpRequest.open('GET', url);
-    httpRequest.send();
-  },
   getInitialState: function() {
     return {
       search: "assignee",
@@ -61,25 +48,25 @@ var Issues = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.getJson("/api/github/foundation-users", function(data) {
+    getJSON("/api/github/foundation-users", function(data) {
       this.setState({
         users: data
       });
     }.bind(this));
 
-    this.getJson("/api/github/mozilla-repo-names", function(data) {
+    getJSON("/api/github/mozilla-repo-names", function(data) {
       this.setState({
         repos: data
       });
     }.bind(this));
 
-    this.getJson("/api/github/mozilla-labels", function(data) {
+    getJSON("/api/github/mozilla-labels", function(data) {
       this.setState({
         labels: data
       });
     }.bind(this));
 
-    this.getJson("/api/github/mozilla-milestones", function(data) {
+    getJSON("/api/github/mozilla-milestones", function(data) {
       this.setState({
         milestones: data
       });
