@@ -71,7 +71,8 @@ app.use(github.middleware);
  * Controllers (route handlers).
  */
 var routes = {
-  schedule: require('./server/controllers/schedule')
+  schedule: require('./server/controllers/schedule'),
+  issues: require('./server/controllers/issues')
 };
 
 /**
@@ -102,6 +103,10 @@ app.get('/api/user/:username', function(req, res) {
     res.type('application/json').send(body);
   });
 });
+app.get('/api/myissues/assigned', routes.issues.myAssigned);
+app.get('/api/myissues/subscribed', routes.issues.mySubscribed);
+app.get('/api/myissues/mentioned', routes.issues.myMentioned);
+app.get('/api/myissues/created', routes.issues.myCreated);
 
 function oauthCB(req, res, path) {
   var oauth = require('github-oauth')({
@@ -188,6 +193,9 @@ app.get('/audience', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/dashboards', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
+});
+app.get('/myissues', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
 app.get('/bugs', function(req, res) {

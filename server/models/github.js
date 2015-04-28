@@ -307,6 +307,23 @@ Github.prototype.teamMembers = function(team, callback) {
 
 // XXX REFACTOR THIS CACHING/TOKEN/JSON BUSINESS using githubJSON above
 
+
+Github.prototype.myIssuesAssigned = function(callback) {
+  this.githubJSON('/issues?filter=assigned&sort=updated', callback);
+};
+
+Github.prototype.myIssuesSubscribed = function(callback) {
+  this.githubJSON('/issues?filter=subscribed&sort=updated', callback);
+};
+
+Github.prototype.myIssuesMentioned = function(callback) {
+  this.githubJSON('/issues?filter=mentioned&sort=updated', callback);
+};
+
+Github.prototype.myIssuesCreated = function(callback) {
+  this.githubJSON('/issues?filter=created&sort=updated', callback);
+};
+
 Github.prototype.search = function(q, sort, order, callback) {
   // Cache target
   var path = "?q="+encodeURIComponent(q) +
