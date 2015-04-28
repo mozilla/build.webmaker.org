@@ -122,6 +122,7 @@ var ShowMyIssues = React.createClass({
             <div className="myissues">
               {issuegroups}
             </div>
+            <p>If you have more than 100 assigned issues: <a href="https://github.com/issues/assigned">visit Github directly</a>, and learn to delegate. </p>
         </div>
       </div>
     );

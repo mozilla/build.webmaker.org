@@ -2411,6 +2411,17 @@ var ShowMyIssues = React.createClass({
           "div",
           { className: "myissues" },
           issuegroups
+        ),
+        React.createElement(
+          "p",
+          null,
+          "If you have more than 100 assigned issues: ",
+          React.createElement(
+            "a",
+            { href: "https://github.com/issues/assigned" },
+            "visit Github directly"
+          ),
+          ", and learn to delegate. "
         )
       )
     );

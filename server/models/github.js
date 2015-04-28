@@ -309,19 +309,19 @@ Github.prototype.teamMembers = function(team, callback) {
 
 
 Github.prototype.myIssuesAssigned = function(callback) {
-  this.githubJSON('/issues?filter=assigned&sort=updated', callback);
+  this.githubJSON('/issues?filter=assigned&sort=updated&per_page=100', callback);
 };
 
 Github.prototype.myIssuesSubscribed = function(callback) {
-  this.githubJSON('/issues?filter=subscribed&sort=updated', callback);
+  this.githubJSON('/issues?filter=subscribed&sort=updated&per_page=100', callback);
 };
 
 Github.prototype.myIssuesMentioned = function(callback) {
-  this.githubJSON('/issues?filter=mentioned&sort=updated', callback);
+  this.githubJSON('/issues?filter=mentioned&sort=updated&per_page=100', callback);
 };
 
 Github.prototype.myIssuesCreated = function(callback) {
-  this.githubJSON('/issues?filter=created&sort=updated', callback);
+  this.githubJSON('/issues?filter=created&sort=updated&per_page=100', callback);
 };
 
 Github.prototype.search = function(q, sort, order, callback) {
