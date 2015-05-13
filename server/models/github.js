@@ -124,7 +124,8 @@ Github.prototype.githubRequest = function(options, callback) {
           callback(error, collection);
         } else if (data.message) {
           // Likely an error.
-          callback(data);
+          console.log("warning: " + data.message + " " + url + page);
+          callback(error, []);
         } else {
           // Likely dealing with non array data. We can stop.
           this.cache.set(url, data);
@@ -210,7 +211,7 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
   });
 };
 
-var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.org goggles.webmaker.org webmaker-tests sawmill login.webmaker.org openbadges-badgekit webmaker-app api.webmaker.org popcorn.webmaker.org webmaker-mediasync webmaker.org webmaker-app-cordova webmaker-metrics nimble mozilla-opennews teach-api mozillafestival.org call-congress-net-neutrality thimble.webmaker.org advocacy.mozilla.org privacybadges webmaker-profile-2 call-congress build.webmaker.org webmaker-landing-pages webliteracymap events.webmaker.org badgekit-api openbadges-specification make-valet webmaker-auth webmaker-events-service webmaker-language-picker MakeAPI blog.webmaker.org webmaker-login-ux webmaker-desktop webmaker-app-publisher badges.mozilla.org lumberyard webmaker-download-locales webmaker-addons bsd-forms-and-wrappers popcorn-js hivelearningnetworks.org webmaker-firehose makeapi-client makerstrap webmaker-app-bot webmaker-screenshot react-i18n webmaker-kits-builder webmaker-app-guide".split(" ");
+var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.org goggles.webmaker.org webmaker-tests sawmill login.webmaker.org openbadges-badgekit webmaker-android api.webmaker.org popcorn.webmaker.org webmaker-mediasync webmaker.org webmaker-app-cordova webmaker-metrics nimble mozilla-opennews teach-api mozillafestival.org call.mozilla.org thimble.webmaker.org advocacy.mozilla.org privacybadges webmaker-profile-2 call-congress build.webmaker.org webmaker-landing-pages webliteracymap events.webmaker.org badgekit-api openbadges-specification make-valet webmaker-auth webmaker-events-service webmaker-language-picker MakeAPI blog.webmaker.org webmaker-login-ux webmaker-desktop webmaker-app-publisher badges.mozilla.org lumberyard webmaker-download-locales webmaker-addons bsd-forms-and-wrappers popcorn-js hivelearningnetworks.org webmaker-firehose makeapi-client makerstrap webmaker-app-bot webmaker-screenshot react-i18n webmaker-kits-builder".split(" ");
 var foundationOrgs = ["MozillaFoundation", "MozillaScience"];
 
 /**
