@@ -29,13 +29,15 @@ var ShowMyIssues = React.createClass({
     // Assigned issues
     getJSON(APIServer + "/myissues/assigned",
       function(data) {
-        if (self.isMounted()) {
-          var issues = { title: 'Assigned',
-                        issues: data.issues}
-          var newState = self.state.issuegroups;
-          newState.push(issues)
-          self.setState(newState);
-        }
+        var issues = { title: 'Assigned to me',
+                      issues: data.issues}
+
+        // clone the existing array
+        var newState = self.state.issuegroups.slice(0);
+        newState.push(issues)
+        self.setState({
+          issuegroups: newState
+        });
       },
       function(err) {
       }
@@ -43,13 +45,15 @@ var ShowMyIssues = React.createClass({
     // subscribed issues
     getJSON(APIServer + "/myissues/subscribed",
       function(data) {
-        if (self.isMounted()) {
-          var issues = { title: 'Subscribed',
-                        issues: data.issues}
-          var newState = self.state.issuegroups;
-          newState.push(issues)
-          self.setState(newState);
-        }
+        var issues = { title: 'Subscribed to',
+                      issues: data.issues}
+
+        // clone the existing array
+        var newState = self.state.issuegroups.slice(0);
+        newState.push(issues)
+        self.setState({
+          issuegroups: newState
+        });
       },
       function(err) {
       }
@@ -57,13 +61,15 @@ var ShowMyIssues = React.createClass({
     // mentions issues
     getJSON(APIServer + "/myissues/mentioned",
       function(data) {
-        if (self.isMounted()) {
-          var issues = { title: 'Mentioned',
-                        issues: data.issues}
-          var newState = self.state.issuegroups;
-          newState.push(issues)
-          self.setState(newState);
-        }
+        var issues = { title: 'Mentioning me',
+                      issues: data.issues}
+
+        // clone the existing array
+        var newState = self.state.issuegroups.slice(0);
+        newState.push(issues)
+        self.setState({
+          issuegroups: newState
+        });
       },
       function(err) {
       }
@@ -71,13 +77,15 @@ var ShowMyIssues = React.createClass({
     // created issues
     getJSON(APIServer + "/myissues/created",
       function(data) {
-        if (self.isMounted()) {
-          var issues = { title: 'Created',
-                        issues: data.issues}
-          var newState = self.state.issuegroups;
-          newState.push(issues)
-          self.setState(newState);
-        }
+        var issues = { title: 'Tickets I Filed',
+                      issues: data.issues}
+
+        // clone the existing array
+        var newState = self.state.issuegroups.slice(0);
+        newState.push(issues)
+        self.setState({
+          issuegroups: newState
+        });
       },
       function(err) {
       }
@@ -106,7 +114,30 @@ var ShowMyIssues = React.createClass({
             <div className="myissues">
               {issuegroups}
             </div>
-            <p>If you have more than 100 assigned issues: <a href="https://github.com/issues/assigned">visit Github directly</a>, and learn to delegate. </p>
+            <p>If you have more than 100 assigned issues: <a href="https://github.com/issues/assigned">view them on Github directly</a>, and maybe learn to delegate ;) </p>
+        </div>
+      </div>
+    );
+  }
+});
+
+var ShowLoginMessage = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <div className="header">
+          <h2>All My Issues</h2>
+        </div>
+        <div className="main">
+          <a className="button" onClick={this.login}>Sign In with Github</a>
+          <p>Sign in to your Github account to see a list of all your open GitHub issues:</p>
+          <ul>
+            <li>Assigned</li>
+            <li>Subscribed</li>
+            <li>Mentioned</li>
+            <li>Created</li>
+          </ul>
+          <div className="pagefill"/>
         </div>
       </div>
     );
@@ -120,24 +151,7 @@ var MyIssues = React.createClass({
     if (this.state.loggedIn) {
       return <ShowMyIssues/>;
     } else {
-      return (
-        <div>
-          <div className="header">
-            <h2>All My Issues</h2>
-          </div>
-          <div className="main">
-            <a className="button" onClick={this.login}>Login with Github</a>
-            <p>Log in to your Github account to see a list of all your open GitHub issues:</p>
-            <ul>
-              <li>Assigned</li>
-              <li>Subscribed</li>
-              <li>Mentioned</li>
-              <li>Created</li>
-            </ul>
-            <div className="pagefill"/>
-          </div>
-        </div>
-        );
+      return <ShowLoginMessage/>;
     }
   }
 });

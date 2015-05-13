@@ -2282,7 +2282,6 @@ var IssueCard = React.createClass({
   displayName: "IssueCard",
   render: function () {
     var data = this.props.data;
-    //var repo = this.getShortRepoString(data.html_url);
     return React.createElement(
       "li",
       null,
@@ -2318,43 +2317,51 @@ var ShowMyIssues = React.createClass({
     var self = this;
     // Assigned issues
     getJSON(APIServer + "/myissues/assigned", function (data) {
-      if (self.isMounted()) {
-        var issues = { title: "Assigned",
-          issues: data.issues };
-        var newState = self.state.issuegroups;
-        newState.push(issues);
-        self.setState(newState);
-      }
+      var issues = { title: "Assigned to me",
+        issues: data.issues };
+
+      // clone the existing array
+      var newState = self.state.issuegroups.slice(0);
+      newState.push(issues);
+      self.setState({
+        issuegroups: newState
+      });
     }, function (err) {});
     // subscribed issues
     getJSON(APIServer + "/myissues/subscribed", function (data) {
-      if (self.isMounted()) {
-        var issues = { title: "Subscribed",
-          issues: data.issues };
-        var newState = self.state.issuegroups;
-        newState.push(issues);
-        self.setState(newState);
-      }
+      var issues = { title: "Subscribed to",
+        issues: data.issues };
+
+      // clone the existing array
+      var newState = self.state.issuegroups.slice(0);
+      newState.push(issues);
+      self.setState({
+        issuegroups: newState
+      });
     }, function (err) {});
     // mentions issues
     getJSON(APIServer + "/myissues/mentioned", function (data) {
-      if (self.isMounted()) {
-        var issues = { title: "Mentioned",
-          issues: data.issues };
-        var newState = self.state.issuegroups;
-        newState.push(issues);
-        self.setState(newState);
-      }
+      var issues = { title: "Mentioning me",
+        issues: data.issues };
+
+      // clone the existing array
+      var newState = self.state.issuegroups.slice(0);
+      newState.push(issues);
+      self.setState({
+        issuegroups: newState
+      });
     }, function (err) {});
     // created issues
     getJSON(APIServer + "/myissues/created", function (data) {
-      if (self.isMounted()) {
-        var issues = { title: "Created",
-          issues: data.issues };
-        var newState = self.state.issuegroups;
-        newState.push(issues);
-        self.setState(newState);
-      }
+      var issues = { title: "Tickets I Filed",
+        issues: data.issues };
+
+      // clone the existing array
+      var newState = self.state.issuegroups.slice(0);
+      newState.push(issues);
+      self.setState({
+        issuegroups: newState
+      });
     }, function (err) {});
   },
   render: function () {
@@ -2405,10 +2412,68 @@ var ShowMyIssues = React.createClass({
           React.createElement(
             "a",
             { href: "https://github.com/issues/assigned" },
-            "visit Github directly"
+            "view them on Github directly"
           ),
-          ", and learn to delegate. "
+          ", and maybe learn to delegate ;) "
         )
+      )
+    );
+  }
+});
+
+var ShowLoginMessage = React.createClass({
+  displayName: "ShowLoginMessage",
+  render: function () {
+    return React.createElement(
+      "div",
+      null,
+      React.createElement(
+        "div",
+        { className: "header" },
+        React.createElement(
+          "h2",
+          null,
+          "All My Issues"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "main" },
+        React.createElement(
+          "a",
+          { className: "button", onClick: this.login },
+          "Sign In with Github"
+        ),
+        React.createElement(
+          "p",
+          null,
+          "Sign in to your Github account to see a list of all your open GitHub issues:"
+        ),
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Assigned"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Subscribed"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Mentioned"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Created"
+          )
+        ),
+        React.createElement("div", { className: "pagefill" })
       )
     );
   }
@@ -2422,58 +2487,7 @@ var MyIssues = React.createClass({
     if (this.state.loggedIn) {
       return React.createElement(ShowMyIssues, null);
     } else {
-      return React.createElement(
-        "div",
-        null,
-        React.createElement(
-          "div",
-          { className: "header" },
-          React.createElement(
-            "h2",
-            null,
-            "All My Issues"
-          )
-        ),
-        React.createElement(
-          "div",
-          { className: "main" },
-          React.createElement(
-            "a",
-            { className: "button", onClick: this.login },
-            "Login with Github"
-          ),
-          React.createElement(
-            "p",
-            null,
-            "Log in to your Github account to see a list of all your open GitHub issues:"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "Assigned"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Subscribed"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Mentioned"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Created"
-            )
-          ),
-          React.createElement("div", { className: "pagefill" })
-        )
-      );
+      return React.createElement(ShowLoginMessage, null);
     }
   }
 });
