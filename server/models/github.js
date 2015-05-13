@@ -86,31 +86,15 @@ function Github(githubSecrets, cacheAge) {
   }
 }
 
-
-
-Github.prototype.githubRequest = function(options, callback) {
-  var accessToken = this.token;
-  var url = "https://api.github.com/" + options.query + "?page=";
+Github.prototype.githubRequestAllPages = function(options, callback) {
   var collection = [];
-  var copy = this.cache.get(url);
-  if (typeof copy !== 'undefined') {
-    return callback(null, copy);
-  }
 
   // Fetch deals with multiple pages.
   // The data this code deals with is small enough,
   // so just return all pages worth of data.
   var fetch = function(page) {
-    request({
-      method: 'GET',
-      uri: url + page,
-      json: {},
-      headers: {
-        'User-Agent': 'build.webmaker.org',
-        Accept: 'application/vnd.github.v3+json',
-        Authorization: 'token ' + accessToken
-      }
-    }, function(error, response, data) {
+    var query = "/" + options.query + "?page=" + page;
+    this.githubJSON(query, function(error, data) {
       if (error) {
         console.log(error);
       } else {
@@ -120,19 +104,17 @@ Github.prototype.githubRequest = function(options, callback) {
           fetch(++page);
         } else if (collection.length) {
           // Looks like we're done.
-          this.cache.set(url, collection);
           callback(error, collection);
         } else if (data.message) {
-          // Likely an error.
-          console.log("warning: " + data.message + " " + url + page);
+          // Likely a not found error.
+          console.log("warning: " + data.message + " " + query);
           callback(error, []);
         } else {
           // Likely dealing with non array data. We can stop.
-          this.cache.set(url, data);
           callback(error, data);
         }
       }
-    }.bind(this));
+    });
   }.bind(this);
 
   fetch(0);
@@ -211,7 +193,7 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
   });
 };
 
-var mozillaRepos = "id.webmaker.org webmaker-curriculum snippets teach.webmaker.org goggles.webmaker.org webmaker-tests sawmill login.webmaker.org openbadges-badgekit webmaker-android api.webmaker.org popcorn.webmaker.org webmaker-mediasync webmaker.org webmaker-app-cordova webmaker-metrics nimble mozilla-opennews teach-api mozillafestival.org call.mozilla.org thimble.webmaker.org advocacy.mozilla.org privacybadges webmaker-profile-2 call-congress build.webmaker.org webmaker-landing-pages webliteracymap events.webmaker.org badgekit-api openbadges-specification make-valet webmaker-auth webmaker-events-service webmaker-language-picker MakeAPI blog.webmaker.org webmaker-login-ux webmaker-desktop webmaker-app-publisher badges.mozilla.org lumberyard webmaker-download-locales webmaker-addons bsd-forms-and-wrappers popcorn-js hivelearningnetworks.org webmaker-firehose makeapi-client makerstrap webmaker-app-bot webmaker-screenshot react-i18n webmaker-kits-builder".split(" ");
+var mofoWebmakerEngTeamId = "384003";
 var foundationOrgs = ["MozillaFoundation", "MozillaScience"];
 
 /**
@@ -224,9 +206,53 @@ Github.prototype.getMilestones = function(callback) {
   this.githubJSON(this.repo + '/milestones', callback);
 };
 
+Github.prototype.getTeamIdsFromOrgs = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "orgs/" + item + "/teams"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var ids = [];
+    if (err) {
+      callback(err);
+    } else {
+      // Remove duplicates and filter out just a list of ids.
+      results.forEach(function(team) {
+        var id = team.id;
+        if (ids.indexOf(id) === -1 && team.name !== "Owners") {
+          ids.push(id);
+        }
+      });
+      callback(err, ids);
+    }
+  });
+};
+
+Github.prototype.getReposFromTeamIds = function(teams, callback) {
+  async.concat(teams, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "teams/" + item + "/repos"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var repos = [];
+    if (err) {
+      callback(err);
+    } else {
+      results.forEach(function(repo) {
+        var repoString = repo.owner.login + "/" + repo.name;
+        // Remove duplicates and filter out just a list of ids.
+        if (repos.indexOf(repoString) === -1) {
+          repos.push(repoString);
+        }
+      });
+      callback(err, repos);
+    }
+  });
+};
+
 Github.prototype.getReposFromOrgs = function(orgs, callback) {
   async.concat(orgs, function(item, callback) {
-    this.githubRequest({
+    this.githubRequestAllPages({
       query: "orgs/" + item + "/repos"
     }, callback);
   }.bind(this), function(err, results) {
@@ -235,25 +261,20 @@ Github.prototype.getReposFromOrgs = function(orgs, callback) {
 };
 
 Github.prototype.getMozillaRepos = function(callback) {
-  this.getReposFromOrgs(foundationOrgs, function(err, results) {
+  this.getTeamIdsFromOrgs(foundationOrgs, function(err, ids) {
     if (err) {
-      // Not sure what to do with errors, yet.
       callback(err);
     } else {
-      var repoNames = [];
-      results.forEach(function(repo) {
-        repoNames.push(repo.full_name);
+      ids.push(mofoWebmakerEngTeamId);
+      this.getReposFromTeamIds(ids, function(err, results) {
+        callback(err, results);
       });
-      // Merge with static list of mozilla repos.
-      callback(err, repoNames.concat(mozillaRepos.map(function(item) {
-        return "mozilla/" + item;
-      })));
     }
-  });
+  }.bind(this));
 };
 Github.prototype.getUsersForOrgs = function(orgs, callback) {
   async.concat(orgs, function(item, callback) {
-    this.githubRequest({
+    this.githubRequestAllPages({
       query: "orgs/" + item + "/members"
     }, callback);
   }.bind(this), function(err, results) {
@@ -282,7 +303,7 @@ Github.prototype.getMilestonesForRepos = function(repos, callback) {
   async.concat(repos, function(item, callback) {
     var orgName = item.repo;
     var repoName = item.org;
-    this.githubRequest({
+    this.githubRequestAllPages({
       query: "repos/" + item + "/milestones"
     }, callback);
   }.bind(this), function(err, results) {
@@ -305,7 +326,7 @@ Github.prototype.getLabelsForRepos = function(repos, callback) {
   async.concat(repos, function(item, callback) {
     var orgName = item.repo;
     var repoName = item.org;
-    this.githubRequest({
+    this.githubRequestAllPages({
       query: "repos/" + item + "/labels"
     }, callback);
   }.bind(this), function(err, results) {

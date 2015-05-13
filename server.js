@@ -293,7 +293,7 @@ function primeCache( urlPrefix ) {
 // Cache a few urls so the user always uses cache and never needs to wait.
 primeCache(app.get("host") + ":" + app.get('port'));
 
-github.githubRequest({query:"rate_limit"}, function(err, data) {
+github.githubRequestAllPages({query:"rate_limit"}, function(err, data) {
   if (err) {
     console.log(err);
   } else {
