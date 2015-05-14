@@ -5,6 +5,7 @@ var { AuthBlock } = require("./auth.jsx");
 var Add = require("./add.jsx");
 var { Now, Next } = require("./heartbeats.jsx");
 var Upcoming = require("./upcoming.jsx");
+var MyIssues = require("./myissues.jsx");
 var Homepage = require("./homepage.jsx");
 var Design = require("./design.jsx");
 var Dashboards = require("./dashboards.jsx");
@@ -24,6 +25,7 @@ var App = React.createClass({
           <ul className="navigation">
             <li className="icon-home"><Link to="/">Home</Link></li>
             <AuthBlock/>
+            <li className="icon-github"><Link to="myissues">All My Issues</Link></li>
             <li>&nbsp;</li>
 
             <li className="icon-add"><Link to="add">Add Project</Link></li>
@@ -86,6 +88,7 @@ var routes = (
     <Route name="bugs" handler={Bugs}/>
     <Route name="audience" handler={Audience}/>
     <Route name="dashboards" handler={Dashboards}/>
+    <Route name="myissues" handler={MyIssues}/>
     <DefaultRoute handler={Homepage}/>
   </Route>
 );
