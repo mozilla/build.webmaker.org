@@ -13,6 +13,8 @@ var Design = React.createClass({
                 <p>These live on <a href="https://drive.google.com/drive/u/0/#folders/0B_rbDAen9prkS0N4MXRqaGo4bEE">Google Drive</a> for now.  Each link below will take you to the relevant subdirectory.</p>
 
                 <ul className="assets">
+      <li><a href="https://github.com/MozillaFoundation/Mofo-Design-Handbook/issues/20">
+        Project brief</a> checklist for planning and kickoffs</li>
       <li><a href="https://drive.google.com/drive/u/0/#folders/0B_rbDAen9prkS0N4MXRqaGo4bEE/0ByGu6IwBft5mNHFHVWNGSmNoNkU">
         Bootstrap</a> houses Illustrator files to design using Bootstrap 3 grids</li>
       <li><a href="https://drive.google.com/drive/u/0/#folders/0B_rbDAen9prkS0N4MXRqaGo4bEE/0B_rbDAen9prkbjJDeVYxMmhUVTQ">
