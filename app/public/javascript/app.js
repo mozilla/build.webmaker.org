@@ -1183,6 +1183,15 @@ var Design = React.createClass({
       ),
       React.createElement(
         "div",
+        { className: "header alert" },
+        React.createElement(
+          "h2",
+          null,
+          "This page is still under construction. Links will not work."
+        )
+      ),
+      React.createElement(
+        "div",
         { className: "design-intro" },
         React.createElement(
           "header",

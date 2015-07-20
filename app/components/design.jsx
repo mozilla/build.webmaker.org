@@ -7,6 +7,9 @@ var Design = React.createClass({
         <div className="header">
           <h2>Design</h2>
         </div>
+        <div className="header alert">
+          <h2>This page is still under construction. Links will not work.</h2>
+        </div>
         <div className="design-intro">
           <header>
             <h2>Welcome to the Design Hub of the Mozilla Foundation.</h2>
