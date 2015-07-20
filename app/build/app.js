@@ -1227,7 +1227,13 @@ var Design = React.createClass({
             React.createElement(
               "p",
               null,
-              "The principles we care about building into our products, our process and our team."
+              "The ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "principles"
+              ),
+              " we care about building into our products, our process and our team."
             ),
             React.createElement(
               "a",
@@ -1246,7 +1252,25 @@ var Design = React.createClass({
             React.createElement(
               "p",
               null,
-              "Standards and kits for incoporating new work into existing projects, including documentation for Webmaker, Mozilla Learning Networks and Mozilla Advocacy."
+              "Standards and kits for incoporating new work into existing projects, including documentation for ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "Webmaker"
+              ),
+              ", ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "Mozilla Learning Networks"
+              ),
+              " and ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "Mozilla Advocacy"
+              ),
+              "."
             ),
             React.createElement(
               "a",
@@ -1265,7 +1289,42 @@ var Design = React.createClass({
             React.createElement(
               "p",
               null,
-              "Logos, fonts, colours, UX & UI templates for mobile, tablet and desktop, photography, illustration, etc."
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "Logos"
+              ),
+              ", ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "fonts"
+              ),
+              ", ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "colours"
+              ),
+              ", ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "UX & UI templates"
+              ),
+              " for mobile, tablet and desktop, ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "photography"
+              ),
+              ", ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "illustration"
+              ),
+              ", etc."
             ),
             React.createElement(
               "a",
@@ -1284,7 +1343,19 @@ var Design = React.createClass({
             React.createElement(
               "p",
               null,
-              "More about how we work, including how we relish working with design contributors."
+              "More about ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "how we work"
+              ),
+              ", including how we relish working with ",
+              React.createElement(
+                "a",
+                { href: "#", className: "link" },
+                "design contributors"
+              ),
+              "."
             ),
             React.createElement(
               "a",

@@ -18,25 +18,25 @@ var Design = React.createClass({
             <h2>Resources</h2>
             <div className="grid-4">
               <h4>Principles</h4>
-              <p>The principles we care about building into our products, our process and our team.
+              <p>The <a href="#" className="link">principles</a> we care about building into our products, our process and our team.
               </p>
               <a href="#" className="button">Design Principles</a>
             </div>
             <div className="grid-4">
               <h4>Templates & Guidelines</h4>
-              <p>Standards and kits for incoporating new work into existing projects, including documentation for Webmaker, Mozilla Learning Networks and Mozilla Advocacy.
+              <p>Standards and kits for incoporating new work into existing projects, including documentation for <a href="#" className="link">Webmaker</a>, <a href="#" className="link">Mozilla Learning Networks</a> and <a href="#" className="link">Mozilla Advocacy</a>.
               </p>
               <a href="#" className="button">Templates & Guides</a>
             </div>
             <div className="grid-4">
               <h4>Assets</h4>
-              <p>Logos, fonts, colours, UX & UI templates for mobile, tablet and desktop, photography, illustration, etc.
+              <p><a href="#" className="link">Logos</a>, <a href="#" className="link">fonts</a>, <a href="#" className="link">colours</a>, <a href="#" className="link">UX & UI templates</a> for mobile, tablet and desktop, <a href="#" className="link">photography</a>, <a href="#" className="link">illustration</a>, etc.
               </p>
               <a href="#" className="button">Assets Folder</a>
             </div>
             <div className="grid-4">
               <h4>Process</h4>
-              <p>More about how we work, including how we relish working with design contributors.
+              <p>More about <a href="#" className="link">how we work</a>, including how we relish working with <a href="#" className="link">design contributors</a>.
               </p>
               <a href="#" className="button">Tools & Process</a>
             </div>
