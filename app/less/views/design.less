@@ -1,0 +1,73 @@
+@import "../colors";
+
+.alert {
+  top: 0;
+  padding: 1px;
+  background: #E5B41D;
+  h2 {
+    line-height: 23px;
+  }
+}
+
+.grid-4 {
+  width: 20%;
+  float: left;
+  margin-right: 60px;
+  .button {
+    margin: 0;
+  }
+  .link {
+    color: @linkColor;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.main-fluid.design {
+  height: 520px;
+}
+
+.design-intro {
+  width: 100%;
+  background-image: url('/img/logo.jpg');
+  background-repeat: repeat-x;
+  height: 350px;
+  header {
+    display: inline-block;
+    background: #296555;
+    color: white;
+    margin: 90px 0 0 0;
+    h2 {
+      margin: 0;
+      padding: 30px 60px;
+      max-width: 490px;
+      font-size: 37px;
+    }
+  }
+}
+
+.description {
+  color: @darkgray;
+  max-width: 1000px;
+  font-size: 22px;
+  line-height: 40px;
+  a {
+    color: @highlight;
+  }
+}
+
+#assets {
+  margin: 30px 0;
+  h2 {
+    margin-bottom: 15px;
+    font-size: 38px;
+    color: @darkgray;
+  }
+  h4 {
+    color: @highlight;
+    font-weight: 600;
+    font-size: 25px;
+  }
+}
