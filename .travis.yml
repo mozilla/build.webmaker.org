@@ -12,7 +12,7 @@ env:
 deploy:
   provider: heroku
   api_key:
-    secure: O99/NJz9WUZDhN5O3u/xtDC3EqgGA1WVq16ot1VCYeKBeYt5a7Xl0AfcBi0cf9J1PxipiWe8xsEcyNQYLcbtq8rV28MGWC8vHp9z3Y6So7gl6hBdCGld4PgOzXAfijC4nRN3Q3FOdvGDewL1Z6X5mBoUXZ8QzdUfcDwXwPaLFa0=
+    secure: "Z4xcZmKmnuCUwudeXQc4oBoDykDRqr/iPaHtdE+muhAbTNsIoM2uU4kEsjhKMP/ae63UXRJDTD1MCQ9jSZow2mlICshc073q/7zNeMdbuuIQOtUGAVzws5mI7y3ho98jSu2wNq3DO0yu6JjRQdf8SETxFcOMT0420zCkpyv8Dew="
   app:
     master: mofo-intake
   on:
