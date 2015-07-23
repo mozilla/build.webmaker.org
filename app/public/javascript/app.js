@@ -1183,15 +1183,6 @@ var Design = React.createClass({
       ),
       React.createElement(
         "div",
-        { className: "header alert" },
-        React.createElement(
-          "h2",
-          null,
-          "This page is still under construction. Links will not work."
-        )
-      ),
-      React.createElement(
-        "div",
         { className: "design-intro" },
         React.createElement(
           "header",
@@ -1212,7 +1203,7 @@ var Design = React.createClass({
           "Whether you’re looking to learn more about how Mozilla Foundation designers work or quickly trying to find a logo, we’ve got everything you need in this central place. If you can’t find what you’re looking for, ",
           React.createElement(
             "a",
-            { href: "#" },
+            { href: "mailto:mofodesign@mozilla.org" },
             "let us know"
           ),
           "."
@@ -1239,14 +1230,14 @@ var Design = React.createClass({
               "The ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://github.com/MozillaFoundation/Design/issues/39", target: "_", className: "link" },
                 "principles"
               ),
               " we care about building into our products, our process and our team."
             ),
             React.createElement(
               "a",
-              { href: "#", className: "button" },
+              { href: "https://github.com/MozillaFoundation/Design/issues/39", target: "_", className: "button" },
               "Design Principles"
             )
           ),
@@ -1264,26 +1255,20 @@ var Design = React.createClass({
               "Standards and kits for incoporating new work into existing projects, including documentation for ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://drive.google.com/a/mozillafoundation.org/file/d/0ByIoeeW0a3R_TmpZelpYSnRnQzA/view", target: "_", className: "link" },
                 "Webmaker"
               ),
               ", ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: " https://drive.google.com/a/mozilla.com/folderview?id=0B4Q8pzCpDS_eR2dpNnJXRTR1UVU&usp=sharing", target: "_", className: "link" },
                 "Mozilla Learning Networks"
               ),
-              " and ",
-              React.createElement(
-                "a",
-                { href: "#", className: "link" },
-                "Mozilla Advocacy"
-              ),
-              "."
+              " and Mozilla Advocacy."
             ),
             React.createElement(
               "a",
-              { href: "#", className: "button" },
+              { href: "https://drive.google.com/open?id=0ByIoeeW0a3R_UjEzdDU4NlMzYXc", target: "_", className: "button" },
               "Templates & Guides"
             )
           ),
@@ -1300,44 +1285,38 @@ var Design = React.createClass({
               null,
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://drive.google.com/open?id=0B_rbDAen9prkZjRsMDJMa3h0WUE", target: "_", className: "link" },
                 "Logos"
               ),
               ", ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://drive.google.com/open?id=0B_rbDAen9prkYkFhOTNBX2RpYUU", target: "_", className: "link" },
                 "fonts"
               ),
               ", ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://drive.google.com/open?id=0B_rbDAen9prkUmd1N1lFM3E0dFk", target: "_", className: "link" },
                 "colours"
               ),
               ", ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
-                "UX & UI templates"
-              ),
-              " for mobile, tablet and desktop, ",
-              React.createElement(
-                "a",
-                { href: "#", className: "link" },
+                { href: "https://www.flickr.com/photos/mozilladrumbeat/favorites/", target: "_", className: "link" },
                 "photography"
               ),
               ", ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://drive.google.com/open?id=0BzfN9sXlOXt1RmE5dlhpQ2JCVXc", target: "_", className: "link" },
                 "illustration"
               ),
               ", etc."
             ),
             React.createElement(
               "a",
-              { href: "#", className: "button" },
+              { href: "https://drive.google.com/open?id=0ByIoeeW0a3R_STBRYnYzTTJvVkk", target: "_", className: "button" },
               "Assets Folder"
             )
           ),
@@ -1355,20 +1334,20 @@ var Design = React.createClass({
               "More about ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://github.com/xmatthewx/Mofo-Design-Handbook/tree/master/Process", target: "_", className: "link" },
                 "how we work"
               ),
               ", including how we relish working with ",
               React.createElement(
                 "a",
-                { href: "#", className: "link" },
+                { href: "https://github.com/MozillaFoundation/Design/issues/50", target: "_", className: "link" },
                 "design contributors"
               ),
               "."
             ),
             React.createElement(
               "a",
-              { href: "#", className: "button" },
+              { href: "https://github.com/MozillaFoundation/Design/issues/43", target: "_", className: "button" },
               "Tools & Process"
             )
           )
