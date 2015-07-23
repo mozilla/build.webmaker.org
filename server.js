@@ -20,6 +20,7 @@ var cors = require('cors');
 var expressValidator = require('express-validator');
 var issueParser = require('./server/issueparser.js');
 var processHook = issueParser.processHook;
+var request = require( "request" );
 
 /**
  * Import API keys from environment
@@ -29,12 +30,9 @@ var secrets = require('./server/config/secrets');
 /**
  * Github handlers
  */
+var githubCacheAge = 60 * 60 * 1000; // every hour
 var Github = require('./server/models/github');
-var github = new Github(
-  secrets.github.clientID,
-  secrets.github.clientSecret
-);
-
+var github = new Github(secrets.github, githubCacheAge);
 
 /**
  * Create Express server.
@@ -42,9 +40,15 @@ var github = new Github(
 var app = express();
 
 /**
+ * Controllers (route handlers).
+ */
+var routes = require( "./routes" )();
+
+/**
  * Express configuration.
  */
 app.set('port', process.env.PORT || 8080);
+app.set('host', process.env.HOST || "http://localhost");
 app.set('github_org', 'MozillaFoundation');
 app.set('github_repo', 'plan');
 
@@ -201,7 +205,101 @@ app.get('/myissues', function(req, res) {
 app.get('/bugs', function(req, res) {
   res.sendFile(path.join(__dirname, './app/public/index.html'));
 });
+app.get('/issues', function(req, res) {
+  res.sendFile(path.join(__dirname, './app/public/index.html'));
+});
 
+app.get( "/api/github/mozilla-repo-names", function(req, res) {
+  // Get Foundation repos then merge them with a static list of mozilla repos.
+  github.getMozillaRepos(function(err, results) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+app.get( "/api/github/foundation-users", function(req, res) {
+  github.getFoundationUsers(function(err, results) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+app.get( "/api/github/mozilla-labels", function(req, res) {
+
+  github.getMozillaRepos(function(err, repos) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      github.getLabelsForRepos(repos, function(err, results) {
+        if (err) {
+          // Not sure what to do with errors, yet.
+          console.log(err);
+        } else {
+          res.json(results);
+        }
+      });
+    }
+  });
+});
+app.get( "/api/github/mozilla-milestones", function(req, res) {
+
+  github.getMozillaRepos(function(err, repos) {
+    if (err) {
+      // Not sure what to do with errors, yet.
+      console.log(err);
+    } else {
+      github.getMilestonesForRepos(repos, function(err, results) {
+        if (err) {
+          // Not sure what to do with errors, yet.
+          console.log(err);
+        } else {
+          res.json(results);
+        }
+      });
+    }
+  });
+});
+
+function primeCache( urlPrefix ) {
+  [
+    { url: "/api/github/mozilla-repo-names" },
+    { url: "/api/github/foundation-users" },
+    { url: "/api/github/mozilla-labels" },
+    { url: "/api/github/mozilla-milestones" }
+ ].forEach( function( resource ) {
+    var url = resource.url;
+
+    function updateResource() {
+      request.get( urlPrefix + url, function( err, resp, body ) {
+        if ( err ) {
+          return console.log( "Error updating cache entry for %s: %s", url, err );
+        }
+      });
+    }
+
+    // Setup a timer to do this update, and also do one now
+    updateResource();
+    setInterval( updateResource, githubCacheAge ).unref();
+ });
+}
+
+// Cache a few urls so the user always uses cache and never needs to wait.
+primeCache(app.get("host") + ":" + app.get('port'));
+
+github.githubRequestAllPages({query:"rate_limit"}, function(err, data) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Github API requests left: " + data.rate.remaining);
+  }
+});
 
 /**
  * Webhook handler (from github)

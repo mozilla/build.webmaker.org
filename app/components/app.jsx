@@ -3,6 +3,7 @@ var Router = require("react-router");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
 var { AuthBlock } = require("./auth.jsx");
 var Add = require("./add.jsx");
+var Issues = require("./issues.jsx");
 var { Now, Next } = require("./heartbeats.jsx");
 var Upcoming = require("./upcoming.jsx");
 var MyIssues = require("./myissues.jsx");
@@ -29,6 +30,7 @@ var App = React.createClass({
             <li>&nbsp;</li>
 
             <li className="icon-add"><Link to="add">Add Project</Link></li>
+            <li className="icon-github"><Link to="issues">Issues</Link></li>
             <li className="icon-now"><Link to="now">This Heartbeat</Link></li>
             <li className="icon-next">
               <Link to="next">Next Heartbeat</Link>
@@ -81,6 +83,7 @@ var App = React.createClass({
 var routes = (
   <Route path="/" handler={App}>
     <Route name="add" handler={Add}/>
+    <Route name="issues" handler={Issues}/>
     <Route name="now" handler={Now}/>
     <Route name="next" handler={Next} path="next" title="Next Heartbeat"/>
     <Route name="upcoming" handler={Upcoming}/>

@@ -8,22 +8,21 @@
 var async = require('async');
 var lru = require('lru-cache');
 var request = require('request');
-var secrets = require('../config/secrets');
 
 /**
  * Constructor
  */
-function Github(client, secret) {
+function Github(githubSecrets, cacheAge) {
   var _this = this;
 
-  _this.client = client;
-  _this.secret = secret;
-  _this.token = secrets.github.token;
+  _this.client = githubSecrets.client;
+  _this.secret = githubSecrets.secret;
+  _this.token = githubSecrets.token;
   _this.host = 'https://api.github.com';
   _this.repo = '/repos/MozillaFoundation/plan';
   _this.cache = lru({
-    max: 100,
-    maxAge: 1000 * 60 * 5
+    max: 500,
+    maxAge: cacheAge || 60 * 60 * 1000 // default: every hour
   });
 
   /**
@@ -87,7 +86,39 @@ function Github(client, secret) {
   }
 }
 
+Github.prototype.githubRequestAllPages = function(options, callback) {
+  var collection = [];
 
+  // Fetch deals with multiple pages.
+  // The data this code deals with is small enough,
+  // so just return all pages worth of data.
+  var fetch = function(page) {
+    var query = "/" + options.query + "?page=" + page;
+    this.githubJSON(query, function(error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        if (data.length) {
+          collection = collection.concat(data);
+          // We have new data, keep going.
+          fetch(++page);
+        } else if (collection.length) {
+          // Looks like we're done.
+          callback(error, collection);
+        } else if (data.message) {
+          // Likely a not found error.
+          console.log("warning: " + data.message + " " + query);
+          callback(error, []);
+        } else {
+          // Likely dealing with non array data. We can stop.
+          callback(error, data);
+        }
+      }
+    });
+  }.bind(this);
+
+  fetch(0);
+};
 
 Github.prototype.githubJSON = function(fragment, callback) {
   var _this = this;
@@ -162,6 +193,9 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
   });
 };
 
+var mofoWebmakerEngTeamId = "384003";
+var foundationOrgs = ["MozillaFoundation", "MozillaScience"];
+
 /**
  * Returns an array of milestones from the "plan" repo.
  *
@@ -170,6 +204,145 @@ Github.prototype.postIssueWithToken = function(token, body, callback) {
  */
 Github.prototype.getMilestones = function(callback) {
   this.githubJSON(this.repo + '/milestones', callback);
+};
+
+Github.prototype.getTeamIdsFromOrgs = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "orgs/" + item + "/teams"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var ids = [];
+    if (err) {
+      callback(err);
+    } else {
+      // Remove duplicates and filter out just a list of ids.
+      results.forEach(function(team) {
+        var id = team.id;
+        if (ids.indexOf(id) === -1 && team.name !== "Owners") {
+          ids.push(id);
+        }
+      });
+      callback(err, ids);
+    }
+  });
+};
+
+Github.prototype.getReposFromTeamIds = function(teams, callback) {
+  async.concat(teams, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "teams/" + item + "/repos"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var repos = [];
+    if (err) {
+      callback(err);
+    } else {
+      results.forEach(function(repo) {
+        var repoString = repo.owner.login + "/" + repo.name;
+        // Remove duplicates and filter out just a list of ids.
+        if (repos.indexOf(repoString) === -1) {
+          repos.push(repoString);
+        }
+      });
+      callback(err, repos);
+    }
+  });
+};
+
+Github.prototype.getReposFromOrgs = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "orgs/" + item + "/repos"
+    }, callback);
+  }.bind(this), function(err, results) {
+    callback(err, results);
+  });
+};
+
+Github.prototype.getMozillaRepos = function(callback) {
+  this.getTeamIdsFromOrgs(foundationOrgs, function(err, ids) {
+    if (err) {
+      callback(err);
+    } else {
+      ids.push(mofoWebmakerEngTeamId);
+      this.getReposFromTeamIds(ids, function(err, results) {
+        callback(err, results);
+      });
+    }
+  }.bind(this));
+};
+Github.prototype.getUsersForOrgs = function(orgs, callback) {
+  async.concat(orgs, function(item, callback) {
+    this.githubRequestAllPages({
+      query: "orgs/" + item + "/members"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var users = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(user) {
+        if (users.indexOf(user.login) === -1) {
+          users.push(user.login);
+        }
+      });
+      callback(err, users);
+    }
+  });
+};
+
+Github.prototype.getFoundationUsers = function(callback) {
+  this.getUsersForOrgs(foundationOrgs, function(err, results) {
+    callback(err, results);
+  });
+};
+
+Github.prototype.getMilestonesForRepos = function(repos, callback) {
+  async.concat(repos, function(item, callback) {
+    var orgName = item.repo;
+    var repoName = item.org;
+    this.githubRequestAllPages({
+      query: "repos/" + item + "/milestones"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var collection = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(item) {
+        if (collection.indexOf(item.title) === -1) {
+          collection.push(item.title);
+        }
+      });
+      callback(err, collection);
+    }
+  });
+};
+
+Github.prototype.getLabelsForRepos = function(repos, callback) {
+  async.concat(repos, function(item, callback) {
+    var orgName = item.repo;
+    var repoName = item.org;
+    this.githubRequestAllPages({
+      query: "repos/" + item + "/labels"
+    }, callback);
+  }.bind(this), function(err, results) {
+    var collection = [];
+    if (err) {
+      callback(err);
+    } else {
+      // don't bother returning duplicates.
+      results.forEach(function(item) {
+        if (collection.indexOf(item.name) === -1) {
+          collection.push(item.name);
+        }
+      });
+      callback(err, collection);
+    }
+  });
 };
 
 Github.prototype.getIssuesForMilestone = function(id, callback) {
