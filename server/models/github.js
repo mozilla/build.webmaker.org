@@ -128,6 +128,10 @@ Github.prototype.githubJSON = function(fragment, callback) {
     return callback(null, copy);
   }
 
+  if (!_this.token) {
+    return;
+  }
+
   // Request from API
   request({
     method: 'GET',
