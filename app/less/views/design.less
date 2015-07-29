@@ -3,7 +3,10 @@
 .grid-4 {
   width: 20%;
   float: left;
-  margin-right: 60px;
+  margin: 0 60px 40px 0;
+  @media screen and (max-width: 1200px) {
+    width: 37%;
+  }
   .button {
     margin: 0;
   }
@@ -18,21 +21,56 @@
 
 .design-intro {
   width: 100%;
-  background-image: url('/img/logo.jpg');
-  background-repeat: repeat-x;
-  height: 350px;
+  padding: 0 0 40px 0;
+  background-color: #279c8a;
   header {
-    display: inline-block;
-    background: #296555;
     color: white;
-    margin: 90px 0 0 0;
     h2 {
-      margin: 0;
-      padding: 30px 60px;
-      max-width: 490px;
+      margin-top: 0;
+      font-weight: 400;
+      text-align: center;
       font-size: 37px;
     }
   }
+  section {
+    position: relative;
+    left: -7%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    max-width: 980px;
+    margin: 0 auto;
+    @media screen and (max-width: 1150px){
+      max-width: 860px;
+      left: -9%;
+    }
+    @media screen and (max-width: 958px){
+      left: 0%;
+    }
+    article {
+      flex-grow: 1;
+      img {
+        width: 110%;
+      }
+    }
+  }
+}
+
+.wrap {
+    display: inline-block;
+    position: relative;
+    width: 648px;
+    left: 50%;
+    margin-left: -382px;
+    padding: 48px 60px 0 60px;
+    @media screen and (min-width: 958px) {
+      margin-left: -478px !important;
+    }
+    @media screen and (max-width: 958px) {
+      // display: inline;
+    }
 }
 
 .description {
