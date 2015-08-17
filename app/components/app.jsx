@@ -1,5 +1,6 @@
 var React = require("react");
 var Router = require("react-router");
+var ga = require("react-ga");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
 var { AuthBlock } = require("./auth.jsx");
 var Add = require("./add.jsx");
@@ -12,6 +13,7 @@ var Design = require("./design.jsx");
 var Dashboards = require("./dashboards.jsx");
 var Bugs = require("./bugs.jsx");
 var Audience = require("./audience.jsx");
+
 
 var App = React.createClass({
     getInitialState: function() {
@@ -96,7 +98,12 @@ var routes = (
   </Route>
 );
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
+// FIXME: Make this part of env instead of hardcoded value.
+ga.initialize('UA-35433268-62');
+
+Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+  if (state.pathname === "/design") {
+    ga.pageview(state.pathname);
+  }
   React.render(<Handler/>, document.getElementById("app"));
 });
-
