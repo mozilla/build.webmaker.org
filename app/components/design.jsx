@@ -32,7 +32,7 @@ var Design = React.createClass({
             </div>
             <div className="grid-4">
               <h4>Templates & Guidelines</h4>
-              <p>Standards and kits for incoporating new work into existing projects, including documentation for <a href="https://drive.google.com/a/mozillafoundation.org/file/d/0ByIoeeW0a3R_TmpZelpYSnRnQzA/view" target="_" className="link">Webmaker</a>, <a href=" https://drive.google.com/a/mozilla.com/folderview?id=0B4Q8pzCpDS_eR2dpNnJXRTR1UVU&usp=sharing" target="_"className="link">Mozilla Learning Networks</a> and Mozilla Advocacy.
+              <p>Standards and kits for incoporating new work into existing projects, including documentation for <a href="https://drive.google.com/open?id=0ByIoeeW0a3R_MHljbUVhVEM0N1E" target="_" className="link">Webmaker</a>, <a href=" https://drive.google.com/a/mozilla.com/folderview?id=0B4Q8pzCpDS_eR2dpNnJXRTR1UVU&usp=sharing" target="_"className="link">Mozilla Learning Networks</a> and Mozilla Advocacy.
               </p>
               <a href="https://drive.google.com/open?id=0ByIoeeW0a3R_UjEzdDU4NlMzYXc" target="_" className="button">Templates & Guides</a>
             </div>
@@ -44,7 +44,7 @@ var Design = React.createClass({
             </div>
             <div className="grid-4">
               <h4>Process</h4>
-              <p>More about <a href="https://github.com/xmatthewx/Mofo-Design-Handbook/tree/master/Process" target="_" className="link">how we work</a>, including how we relish working with <a href="https://github.com/MozillaFoundation/Design/issues/50" target="_" className="link">design contributors</a>.
+              <p>More about <a href="https://github.com/MozillaFoundation/Design/wiki/Process" target="_" className="link">how we work</a>, including how we relish working with <a href="https://github.com/MozillaFoundation/Design/issues/50" target="_" className="link">design contributors</a>.
               </p>
               <a href="https://github.com/MozillaFoundation/Design/issues/43" target="_" className="button">Tools & Process</a>
             </div>
