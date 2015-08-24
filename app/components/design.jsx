@@ -44,9 +44,9 @@ var Design = React.createClass({
             </div>
             <div className="grid-4">
               <h4>Process</h4>
-              <p>More about <a href="https://github.com/MozillaFoundation/Design/wiki/Process" target="_" className="link">how we work</a>, including how we relish working with <a href="https://github.com/MozillaFoundation/Design/issues/50" target="_" className="link">design contributors</a>.
+              <p>More about how we work</a>, including how we relish working with <a href="https://github.com/MozillaFoundation/Design/issues/50" target="_" className="link">design contributors</a>.
               </p>
-              <a href="https://github.com/MozillaFoundation/Design/issues/43" target="_" className="button">Tools & Process</a>
+              <a href="https://github.com/MozillaFoundation/Design/wiki/Process" target="_" className="button">Tools & Process</a>
             </div>
           </div>
         </div>
