@@ -129,7 +129,7 @@ Github.prototype.githubJSON = function(fragment, callback) {
   }
 
   if (!_this.token) {
-    return;
+    return callback(new Error("No token defined"));
   }
 
   // Request from API
@@ -451,7 +451,7 @@ Github.prototype.getUserInfo = function(username, callback) {
 };
 
 Github.prototype.teamMembers = function(team, callback) {
-  _this = this;
+  var _this = this;
   // Find the teams in the org
   // GET /orgs/:org/teams
   // find the id for team name "team"
