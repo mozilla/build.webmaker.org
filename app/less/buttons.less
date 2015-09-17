@@ -21,6 +21,17 @@
     text-decoration: none;
     text-transform: uppercase;
     cursor: pointer;
+    &.cta-white {
+      margin: 0 35%;
+      padding: 15px 20px;
+      background: white;
+      color: @highlight;
+      border: none;
+      text-align: center;
+      &:hover {
+        background: @highlight-hover;
+      }
+    }
 }
 
 .button:hover {

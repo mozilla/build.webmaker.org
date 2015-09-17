@@ -11,7 +11,7 @@ var Design = React.createClass({
           <header className="wrap">
             <h2>Welcome to the Design Hub of the Mozilla Foundation.</h2>
           </header>
-          <section>
+          <section className="faces">
             <article><img src="img/designteam/cassie.svg"alt="Cassie McDaniel"/></article>
             <article><img src="img/designteam/jordan.svg"alt="Jordan Gushwa"/></article>
             <article><img src="img/designteam/luke.svg"alt="Luke Pacholski"/></article>
@@ -19,6 +19,11 @@ var Design = React.createClass({
             <article><img src="img/designteam/ricardo.svg"alt="Ricardo Vazquez"/></article>
             <article><img src="img/designteam/sabrina.svg"alt="Sabrina Ng"/></article>
           </section>
+          <section className="wrap small">
+            <h2>Are you starting a new project? Would you like to collaborate with our team?</h2>
+            <a className="button cta-white" href="http://bit.ly/mozdesignbrief" target="_">Visit our Design Brief</a>
+          </section>
+
         </div>
         <div className="main-fluid design">
           <h3 className="description">Whether you’re looking to learn more about how Mozilla Foundation designers work or quickly trying to find a logo, we’ve got everything you need in this central place. If you can’t find what you’re looking for, <a href="mailto:mofodesign@mozilla.org">let us know</a>.</h3>
