@@ -21,45 +21,25 @@
 
 .design-intro {
   width: 100%;
+  background-color: #00A18A;
+  background-image: url('/svg/design-pattern.svg');
   padding: 0 0 40px 0;
-  background-color: #279c8a;
+  min-height: 360px;
+  height: 60vh;
   header {
     color: white;
     h2 {
       margin-top: 0;
       font-weight: 400;
       text-align: center;
-      font-size: 37px;
+      font-size: 35px;
     }
-  }
-  h2 {
-    margin-top: 0;
-    color: white;
-    font-weight: 400;
-    text-align: center;
-  }
-  .faces {
-    position: relative;
-    left: -7%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    max-width: 980px;
-    margin: 0 auto;
-    @media screen and (max-width: 1150px){
-      max-width: 860px;
-      left: -9%;
-    }
-    @media screen and (max-width: 958px){
-      left: 0%;
-    }
-    article {
-      flex-grow: 1;
-      img {
-        width: 110%;
-      }
+    h4 {
+      margin: 40px 0 20px 0;
+      color: white;
+      font-weight: 300;
+      font-size: 25px;
+      text-align: center;
     }
   }
 }
@@ -70,7 +50,7 @@
     width: 648px;
     left: 50%;
     margin-left: -382px;
-    padding: 48px 60px 0 60px;
+    padding: 12vh 60px 0 60px;
     @media screen and (min-width: 958px) {
       margin-left: -478px !important;
     }
