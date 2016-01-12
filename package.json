@@ -46,6 +46,7 @@
     "gulp-jshint": "git://github.com/spenceralger/gulp-jshint#overrideJshint",
     "gulp-jsxcs": "^0.1.7",
     "gulp-less": "^3.0.3",
+    "gulp-live-server": "0.0.6",
     "gulp-plumber": "^0.6.6",
     "gulp-sourcemaps": "^1.3.0",
     "gulp-uglify": "^1.0.2",
@@ -53,10 +54,12 @@
     "habitat": "^3.1.2",
     "jshint-jsx": "^0.4.0",
     "live-server": "^0.6.3",
+    "lodash": "^3.10.1",
     "lru-cache": "^2.5.0",
     "morgan": "^1.5.1",
     "pluralize": "^1.1.2",
     "react": "^0.12.2",
+    "react-ga": "^1.1.0",
     "react-onclickoutside": "^0.2.0",
     "react-router": "^0.11.6",
     "react-select": "^0.3.2",
@@ -65,9 +68,7 @@
     "request": "^2.52.0",
     "superagent": "^0.21.0",
     "vinyl-source-stream": "^1.0.0",
-    "vinyl-transform": "^1.0.0",
-    "gulp-live-server": "0.0.6",
-    "react-ga": "^1.1.0"
+    "vinyl-transform": "^1.0.0"
   },
   "devDependencies": {
     "gulp-express": "^0.1.7",
