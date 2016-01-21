@@ -26,35 +26,98 @@ var App = React.createClass({
       return (
         <div>
           <ul className="navigation">
-            <li className="icon-home"><Link to="/">Home</Link></li>
+            <li className="icon-home">
+              <Link to="/">
+                Home
+              </Link>
+            </li>
             <AuthBlock/>
-            <li className="icon-github"><Link to="myissues">All My Issues</Link></li>
+            <li className="icon-github">
+              <Link to="myissues">
+                All My Issues
+              </Link>
+            </li>
             <li>&nbsp;</li>
 
-            <li className="icon-add"><Link to="add">Add Project</Link></li>
-            <li className="icon-github"><Link to="issues">Issues</Link></li>
-            <li className="icon-now"><Link to="now">This Heartbeat</Link></li>
-            <li className="icon-next">
-              <Link to="next">Next Heartbeat</Link>
-            </li>
-            <li className="icon-upcoming">
-              <Link to="upcoming">Upcoming</Link>
-            </li>
-            <li>&nbsp;</li>
-            <li className="icon-audience"><Link to="audience">Our Audience</Link></li>
             <li className="icon-strategy">
-            <a href="https://wiki.mozilla.org/Webmaker/2015">Strategy</a></li>
-            <li className="icon-dashboard"><Link to="dashboards">Dashboards</Link></li>
-            <li>&nbsp;</li>
-            <li className="icon-how">How We Work</li>
+              Strategy
+            </li>
             <ul className="sublist">
-              <li><a href="http://book.webmaker.org">Process</a></li>
-              <li><Link to="design">Design</Link></li>
-              <li className="icon-involved">
-                <a href="https://webmaker.org/en-US/getinvolved">Get Involved</a>
+              <li>
+                <a href="http://mzl.la/2020">
+                  Overview
+                </a>
               </li>
-              <li className="file-a-bug icon-github">
-                <Link to="bugs">File a bug</Link>
+              <li>
+                <a href="https://docs.google.com/document/d/1OipsGu8eWuTaT8J3T2-0CR3zB79SysATBLiTTBDGS5I/preview#heading=h.lb5icvvsqptv">
+                  Leadership
+                </a>
+              </li>
+              <li>
+                <a href="https://docs.google.com/document/d/1OipsGu8eWuTaT8J3T2-0CR3zB79SysATBLiTTBDGS5I/preview#heading=h.x2ri9k3nwuu9">
+                  Advocacy
+                </a>
+              </li>
+            </ul>
+
+            <li className="icon-next">
+              Goals
+            </li>
+            <ul className="sublist">
+              <li>
+                <a href="https://github.com/MozillaFoundation/Goals/issues?q=is%3Aopen+label%3A%22Leadership+Network%22+label%3A%22H1+2016%22">
+                  Leadership
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/MozillaFoundation/Goals/issues?utf8=%E2%9C%93&q=is%3Aopen+label%3A%22Advocacy+Engine%22+label%3A%22H1+2016%22+">
+                  Advocacy
+                </a>
+              </li>
+            </ul>
+
+            <li className="icon-now">
+              Plan
+            </li>
+            <ul className="sublist">
+              <li>
+                <Link to="/now">
+                  Heartbeat
+                </Link>
+              </li>
+              <li>
+                <a href="https://docs.google.com/spreadsheets/d/1fr76MH_PJUJXAKvshj8kqTGInA2Sy6l4NoE9Bnxnmvc/preview#gid=517975171">
+                  Month
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/MozillaFoundation/Goals/issues">
+                  Quarter
+                </a>
+              </li>
+            </ul>
+
+            <li className="icon-audience">
+              Resources
+            </li>
+            <ul className="sublist">
+              <li>
+                <a href="https://docs.google.com/document/d/1snKZJcfau9irLs_aK0lYVT-NnAt5er-byuuHPkUcRVo/preview">
+                  Onboarding Handbook
+                </a>
+              </li>
+              <li>
+                <a href="http://book.webmaker.org/process.html">
+                  Process / Project Management
+                </a>
+              </li>
+              <li>
+                <a href="https://mana.mozilla.org/wiki/display/FOUNDATION/Program+Review">
+                  Quarterly Reviews
+                </a>
+              </li>
+              <li>
+                2016 Calendar (coming soon)
               </li>
             </ul>
           </ul>
