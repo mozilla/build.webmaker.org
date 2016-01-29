@@ -12,6 +12,7 @@ var compress = require('compression');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
+var helmet = require('helmet');
 
 var sessions = require('client-sessions');
 var flash = require('express-flash');
@@ -52,6 +53,7 @@ app.set('host', process.env.HOST || "http://localhost");
 app.set('github_org', 'MozillaFoundation');
 app.set('github_repo', 'plan');
 
+app.use(helmet());
 app.use(sessions({
   cookieName: 'session',
   secret: secrets.sessionSecret,

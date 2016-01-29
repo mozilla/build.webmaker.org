@@ -52,6 +52,7 @@
     "gulp-uglify": "^1.0.2",
     "gulp-watch": "^3.0.0",
     "habitat": "^3.1.2",
+    "helmet": " ^1.1.0",
     "jshint-jsx": "^0.4.0",
     "live-server": "^0.6.3",
     "lodash": "^3.10.1",
