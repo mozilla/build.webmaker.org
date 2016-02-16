@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.10'
+- '4.3.0'
 env:
   global:
   - PLAN_SESSION_SECRET="SUPERSECRETOMG"
@@ -14,6 +14,6 @@ deploy:
   api_key:
     secure: "Z4xcZmKmnuCUwudeXQc4oBoDykDRqr/iPaHtdE+muhAbTNsIoM2uU4kEsjhKMP/ae63UXRJDTD1MCQ9jSZow2mlICshc073q/7zNeMdbuuIQOtUGAVzws5mI7y3ho98jSu2wNq3DO0yu6JjRQdf8SETxFcOMT0420zCkpyv8Dew="
   app:
-    master: build-webmaker-org-production
+    master: build-mozillafoundation-org
   on:
     repo: mozilla/build.webmaker.org
