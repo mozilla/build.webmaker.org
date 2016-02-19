@@ -2,7 +2,6 @@ var React = require("react");
 var Router = require("react-router");
 var ga = require("react-ga");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
-var { AuthBlock } = require("./auth.jsx");
 var Add = require("./add.jsx");
 var Issues = require("./issues.jsx");
 var { Now, Next } = require("./heartbeats.jsx");
@@ -29,12 +28,6 @@ var App = React.createClass({
             <li className="icon-home">
               <Link to="/">
                 Home
-              </Link>
-            </li>
-            <AuthBlock/>
-            <li className="icon-github">
-              <Link to="myissues">
-                All My Issues
               </Link>
             </li>
             <li>&nbsp;</li>
