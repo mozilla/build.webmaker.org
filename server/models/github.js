@@ -14,7 +14,6 @@ var request = require('request');
  */
 function Github(token, cacheAge) {
   var _this = this;
-console.log(token);
   _this.token = token;
   _this.host = 'https://api.github.com';
   _this.repo = '/repos/MozillaFoundation/plan';
