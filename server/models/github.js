@@ -12,12 +12,9 @@ var request = require('request');
 /**
  * Constructor
  */
-function Github(githubSecrets, cacheAge) {
+function Github(token, cacheAge) {
   var _this = this;
-
-  _this.client = githubSecrets.client;
-  _this.secret = githubSecrets.secret;
-  _this.token = githubSecrets.token;
+  _this.token = token;
   _this.host = 'https://api.github.com';
   _this.repo = '/repos/MozillaFoundation/plan';
   _this.cache = lru({

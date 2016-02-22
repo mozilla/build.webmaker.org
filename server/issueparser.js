@@ -5,7 +5,7 @@ var firebase_secret = secrets.firebaseSecret;
 var request = require('request');
 var extractRoles = require("./extractRoles.js");
 
-githubToken = secrets.github.token;
+githubToken = secrets.githubToken;
 
 
 // console.log("FIREBASE SECRET", firebase_secret);

@@ -6,11 +6,7 @@
 
 var secrets = require('../config/secrets');
 var Github = require('../models/github');
-var github = new Github({
-  client: secrets.github.clientID,
-  secret: secrets.github.clientSecret,
-  token: secrets.github.token
-});
+var github = new Github(secrets.githubToken);
 
 /**
  * "Assigned Tickets" route handler.

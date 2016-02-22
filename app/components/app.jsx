@@ -2,12 +2,9 @@ var React = require("react");
 var Router = require("react-router");
 var ga = require("react-ga");
 var { Route, RouteHandler, Link, DefaultRoute } = Router;
-var { AuthBlock } = require("./auth.jsx");
-var Add = require("./add.jsx");
 var Issues = require("./issues.jsx");
 var { Now, Next } = require("./heartbeats.jsx");
 var Upcoming = require("./upcoming.jsx");
-var MyIssues = require("./myissues.jsx");
 var Homepage = require("./homepage.jsx");
 var Design = require("./design.jsx");
 var Dashboards = require("./dashboards.jsx");
@@ -29,12 +26,6 @@ var App = React.createClass({
             <li className="icon-home">
               <Link to="/">
                 Home
-              </Link>
-            </li>
-            <AuthBlock/>
-            <li className="icon-github">
-              <Link to="myissues">
-                All My Issues
               </Link>
             </li>
             <li>&nbsp;</li>
@@ -147,7 +138,6 @@ var App = React.createClass({
 
 var routes = (
   <Route path="/" handler={App}>
-    <Route name="add" handler={Add}/>
     <Route name="issues" handler={Issues}/>
     <Route name="now" handler={Now}/>
     <Route name="next" handler={Next} path="next" title="Next Heartbeat"/>
@@ -156,7 +146,6 @@ var routes = (
     <Route name="bugs" handler={Bugs}/>
     <Route name="audience" handler={Audience}/>
     <Route name="dashboards" handler={Dashboards}/>
-    <Route name="myissues" handler={MyIssues}/>
     <DefaultRoute handler={Homepage}/>
   </Route>
 );
