@@ -1,7 +1,6 @@
 var React = require("react");
 var getJSON = require("./getJSON.jsx");
 var Mentions = require("./mentions.jsx");
-var { auth, AuthMixin } = require("./auth.jsx");
 var { Link } = require("react-router");
 var pluralize = require("pluralize");
 
@@ -118,37 +117,6 @@ var GithubInitiativesSearch = React.createClass({
   }
 });
 
-
-
-var Dashboard = React.createClass({
-  mixins: [AuthMixin],
-  getInitialState: function() {
-    var handle = auth.getCurrentUser();
-    if (!handle) {
-      return {};
-    }
-    return {
-      handle: handle
-    };
-  },
-  render: function() {
-    var handle = this.state.handle;
-    return (
-      <div id="dashboard">
-        <div className="header">
-          <h2>Dashboard for {this.state.details.name}</h2>
-        </div>
-        <div className="main">
-          <GithubInitiativesSearch handle={handle}/>
-          <GithubPRSearch handle={handle}/>
-          <GithubIssuesSearch handle={handle}/>
-          <Mentions handle={handle}/>
-        </div>
-      </div>
-    );
-  }
-});
-
 var Splash = React.createClass({
   render: function() {
     return (
@@ -158,8 +126,6 @@ var Splash = React.createClass({
             <h1>Let's Build Webmaker Together</h1>
 
             <div className="center">
-              <Link className="button btn-white"
-                    to="add">Add Project</Link>
               <Link className="button btn-white"
                     to="now">This Heartbeat</Link>
             </div>
@@ -186,13 +152,8 @@ var Splash = React.createClass({
 
 
 var Homepage = React.createClass({
-  mixins: [AuthMixin],
   render: function() {
-    if (this.state.loggedIn) {
-      return <Dashboard/>;
-    } else {
-      return <Splash/>;
-    }
+    return <Splash/>;
   }
 });
 

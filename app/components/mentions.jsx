@@ -4,7 +4,6 @@ var React = require("react");
 var ReactFireMixin = require("reactfire");
 var Firebase = require("client-firebase");
 var GitHubPerson = require("./GitHubPerson.jsx");
-var {auth} = require("./auth.jsx");
 
 var Mention = React.createClass({
   getInitialState: function() {
@@ -81,15 +80,7 @@ var Mention = React.createClass({
                                   repo_name.indexOf("/issues/"));
     }
     if (this.props.question === "mention") {
-      var loggedinUser = auth.getCurrentUser();
       var dismiss = this.dismiss.bind(this, this.props.issue_id);
-      var trashcan;
-      if (loggedinUser === this.props.handle) {
-        trashcan = <a className="dismiss" href="#"
-                      onClick={dismiss}><i className="fa fa-trash" ></i></a>;
-      } else {
-        trashcan = <span/>;
-      }
       if (!comment.body) {
         console.log("WTF", comment);
       }
@@ -103,7 +94,7 @@ var Mention = React.createClass({
                     <div>{repo_name}/
                       <a href={comment.ref_html_url}>
                         {this.state.issue.title}
-                      </a> : {trashcan}
+                      </a>
                     </div>
                     <div className="comment">{parsedBody}</div>
                   </div>
